@@ -1,15 +1,15 @@
-#-------------------------------------------------------------------------------
-#               {}|{}
-#               /o|o\
-#  ___________:/o|||o\}___________    MGI Internship  | S2Water
-#   =|=|=|=|:S|":|||:"|K:|=|=|=|=     Author          : Sotirios Kechagias
-#    """"""""""\:|||:/""""""""""      Created         : July 07, 2023
-#               \.|./                 Last update     : July 07, 2023
-#               /o.o\                 R Version       : 4.3.1
-#              /o.o.o\                LICENSE         : CC BY-NC-SA 4.0
-#            #|o.o.o.o|#
-#
-#-------------------------------------------------------------------------------
+#                                                                              #
+#               {}|{}                                                          #
+#               /o|o\                                                          #
+#  ___________:/o|||o\}___________    MGI Internship  | S2Water                #
+#   =|=|=|=|:S|":|||:"|K:|=|=|=|=     Author          : Sotirios Kechagias     #
+#    """"""""""\:|||:/""""""""""      Created         : July 07, 2023          #
+#               \.|./                 Last update     : July 07, 2023          #
+#               /o.o\                 R Version       : 4.3.1                  #
+#              /o.o.o\                LICENSE         : CC BY-NC-SA 4.0        #
+#            #|o.o.o.o|#                                                       #
+#                                                                              #
+
 
 #### Package Import ####
 pkgTest <- function(x){   #    pkgTest is a helper function to load packages and
@@ -55,15 +55,15 @@ AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 list <- s2_list(
   tile = "32SPF",
   orbit = 122,
-  time_interval = c(as.Date("2022-12-20"), as.Date("2023-02-14")),
-  level = "L2A",
+  time_interval = c(as.Date("2017-01-01"), as.Date("2023-07-01")),
+  level = "auto",
   server = "scihub",
   service = "apihub",
   max_cloud = 10,
+  availability = "check",
   output_type = "deprecated"
-) ; list
+) # ; my_df <- as.data.frame(list) ; write.csv(my_df, "./outputM.csv")
 
-list_SAFE <- safe_is_online(list) ; list_SAFE
 
 
 start_time <- Sys.time()
@@ -84,7 +84,7 @@ expo <- sen2r(
   s2orbits_selected = c("122"),
   list_prods = c("BOA"),
   # list_rgb = c("RGB432B"),
-  # list_indices = c("MNDWI"),
+  list_indices = c("NDWI"),
   index_source = "BOA",
   mask_type = "cloud_and_shadow",
   max_mask = 10, 
