@@ -17,7 +17,12 @@ pkgTest <- function(x){   #    pkgTest is a helper function to load packages and
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)}
-neededPackages <- c("sen2r", "sf")
+neededPackages <- c("sen2r", "sf", "stars", "data.table", "raster", "XML",
+                    "jsonlite", "geojsonio", "foreach", "doParallel", "httr",
+                    "RcppTOML", "leaflet", "leafpm", "mapedit", "s2", "shiny",
+                    "shinyFiles", "shinydashboard", "shinyjs", "shinyWidgets",
+                    "spelling", "httptest", "knitr", "markdown", "rmarkdown",
+                    "sys", "tools", "units", "testthat")
 for (package in neededPackages){pkgTest(package)}
 
 
@@ -34,37 +39,21 @@ if (!dir.exists(output_path)) {dir.create(output_path)}
 safe_dir <- tempfile(pattern = "sen2r_safe_")  # folder to store downloaded SAFE
 
 
-#                                  NOTES
-#-------------------------------------------------------------------------------     
-# In order to allor Sen2Cor performing topographic correction, use functions
-# sen2cor() and sen2r() with the following arguments: sen2cor(...,
-# use_dem = TRUE) sen2r(..., sen2cor_use_dem = TRUE)
-#
-# In order to use (sen2cor {sen2r}) you need a directory of L1C - so the plan is
-# to check with (s2_list) the amount of L1C and L2A images and decide based on
-# the most amount of images
-#-------------------------------------------------------------------------------
-
-
-
-
-
-
 AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 
-list <- s2_list(
+list <- sen2r::s2_list(
   tile = "32SPF",
   orbit = 122,
-  time_interval = c(as.Date("2017-01-01"), as.Date("2023-07-01")),
+  time_interval = c(as.Date("2022-01-01"), as.Date("2023-01-01")),              # (as.Date("2017-01-01"), as.Date("2023-07-01")
   level = "auto",
   server = "scihub",
   service = "apihub",
   max_cloud = 10,
   availability = "check",
   output_type = "deprecated"
-) # ; my_df <- as.data.frame(list) ; write.csv(my_df, "./outputM.csv")
+)  ; my_df <- as.data.frame(list) ; write.csv(my_df, "./outputM.csv")
 
-
+sen2r::s2_order(list)
 
 start_time <- Sys.time()
 expo <- sen2r(
@@ -73,18 +62,18 @@ expo <- sen2r(
   server = "scihub",
   step_atmcorr = "auto", # means that L2A is first searched on SciHub: if found,
                          # it is downloaded, if not, the corresponding Level-1C 
-                         # is downloaded and   sen2cor is used to produce L2A
-  sen2cor_use_dem = TRUE,
+                         # is downloaded and   sen2cor is used to produce L2
+  # sen2cor_use_dem = F  #                                      may be the issue
   # sen2cor_gipp = NA,   #             Ground Image Processing Parameters (GIPP)
   max_cloud_safe = 10,
-  timewindow = c(as.Date("2022-12-20"), as.Date("2023-01-5")),
+  timewindow = c(as.Date("2022-01-01"), as.Date("2023-01-01")),
   extent = AOI,
   extent_name = "AOI",
   s2tiles_selected = c("32SPF"),
   s2orbits_selected = c("122"),
   list_prods = c("BOA"),
   # list_rgb = c("RGB432B"),
-  list_indices = c("NDWI"),
+  # list_indices = c("NDWI"),
   index_source = "BOA",
   mask_type = "cloud_and_shadow",
   max_mask = 10, 
@@ -95,8 +84,13 @@ expo <- sen2r(
   path_l2a = safe_dir,
   path_out = data_path,
   thumbnails = FALSE,
+  parallel = 3
 ) ; end_time <- Sys.time()
 cat("Runtime: ", round(as.numeric(difftime(end_time,start_time, units = "min")),
-                                                      digits = 3),"s", sep = "")
+                                                      digits = 3),"m", sep = "")
+
+
+
+
 
 
