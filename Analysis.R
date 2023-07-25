@@ -17,7 +17,7 @@ pkgTest <- function(x){   #    pkgTest is a helper function to load packages and
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)}
-neededPackages <- c("raster", "ggplot2")
+neededPackages <- c("raster", "ggplot2", "sf")
 for (package in neededPackages){pkgTest(package)}
 
 # Set working directory to the folder containing tif images
@@ -88,6 +88,39 @@ ggplot(ndvi_df, aes(x = Date, y = AvgNDVI)) +
        x = "Date",
        y = "Average NDVI")
 
+
+
+# ///
+
+
+AOI <- sf::st_read("./Data/Lebna_reservoir_buffered.geojson")
+
+
+# Get a list of all tif files in the working directory
+ndvi_images <- list.files(path = "./Output",
+                        pattern = "\\.tif$",
+                        full.names = TRUE)
+
+
+x = raster(ndvi_images[1])
+
+# Convert raster image to a data frame
+raster_df <- as.data.frame(x, xy = TRUE)
+
+AOI <- sf::st_transform(AOI, crs = sf::st_crs(x))
+# Convert the reprojected raster to a data frame
+
+
+# Create the plot
+ggplot() +
+  # Add the raster image as a background
+  geom_raster(data = raster_df, aes(x = x, y = y, fill = S2A2A_20220105_122_AOI_BOA_10_NDVI)) +
+  scale_fill_viridis_c() +  # Use a color scale, you can change it as needed
+  # Add the GeoJSON polygon on top
+  geom_sf(data = AOI, fill = "transparent", color = "red", size = 1) +
+  # Adjust the aspect ratio and theme as needed
+  coord_sf() +
+  theme_minimal()
 
 
 
