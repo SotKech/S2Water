@@ -17,12 +17,9 @@ pkgTest <- function(x){   #    pkgTest is a helper function to load packages and
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)}
-neededPackages <- c("sen2r", "sf", "stars", "data.table", "raster", "XML",
-                    "jsonlite", "geojsonio", "foreach", "doParallel", "httr",
-                    "RcppTOML", "leaflet", "leafpm", "mapedit", "s2", "shiny",
-                    "shinyFiles", "shinydashboard", "shinyjs", "shinyWidgets",
-                    "spelling", "httptest", "knitr", "markdown", "rmarkdown",
-                    "sys", "tools", "units", "testthat")
+neededPackages <- c("raster", "methods", "sf", "stars", "data.table", "XML",
+                    "jsonlite", "geojsonio", "foreach", "parallel",
+                    "doParallel", "httr", "RcppTOML")
 for (package in neededPackages){pkgTest(package)}
 
 
