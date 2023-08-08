@@ -63,7 +63,7 @@ expo <- sen2r(
   # sen2cor_use_dem = F  #                                      may be the issue
   # sen2cor_gipp = NA,   #             Ground Image Processing Parameters (GIPP)
   max_cloud_safe = 10,
-  timewindow = c(as.Date("2023-01-01"), as.Date("2023-07-01")),
+  timewindow = c(as.Date("2017-01-01"), as.Date("2023-07-01")),
   extent = AOI,
   extent_name = "AOI",
   s2tiles_selected = c("32SPF"),
@@ -72,7 +72,7 @@ expo <- sen2r(
   # list_rgb = c("RGB432B"),
   # list_indices = c("NDWI"),
   index_source = "BOA",
-  mask_type = "cloud_and_shadow",
+  mask_type = "nomask", #because of glint
   max_mask = 10, 
   clip_on_extent= TRUE,
   extent_as_mask= TRUE,
