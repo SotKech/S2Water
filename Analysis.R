@@ -29,6 +29,9 @@ for (package in neededPackages) {
 # Set working directory.
 setwd("C:/Projects/S2Water")
 
+# plots_directory <- "./Output/Plots"
+# if (!dir.exists(plots_directory))   {dir.create(plots_directory)}
+
 # Get a list of all tif files in the working directory.
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
@@ -57,7 +60,7 @@ calculate_MNDWI <- function(B3, B11) {
   return(MNDWI)
 }
 
-calculate_AWEI <- function(B2, B3, B8, B11, B12) {              
+calculate_AWEI <- function(B3, B8, B11, B12) {              
   AWEI <- 4 * (B3 - B11) - 0.25 * B8 - 2.75 * B12              # This is AWEInsh
   return(AWEI)      # Also AWEIsh: B2 + 2.5 * B3 - 1.5 * (B8 + B11) - 0.25 * B12
 }
@@ -89,20 +92,22 @@ i = 0
 for (tif_file in tif_files) {
   # Create progression bar.
   i = i + 1
-  j = round((i/as.double(length(tif_files))), 2) ; cat(paste0("\r", j, "%"))
+  j = round((i/as.double(length(tif_files))*100), 2) ; cat(paste0("\r", j, "%"))
   
   # Load the image
   image <- raster::stack(tif_file)
   
   # Extract the necessary bands.
-  B2  <- image[[2]] ;  B3  <- image[[3]] ; B4  <- image[[4]]
-  B5  <- image[[5]] ;  B8  <- image[[8]] ; B11 <- image[[11]]
-  B12 <- image[[12]]
+  B3  <- image[[3]] ; B4  <- image[[4]]  ; B5  <- image[[5]]
+  B8  <- image[[8]] ; B11 <- image[[10]] ;  B12 <- image[[11]]
+  # NOTE: (Sen2r issue) Band 10 is missing from Level-2A products thus bands 8 
+  # and 8a are alternatively present (band 8 if the output resolution is < 20m,
+  # band 8a if >= 20m).
 
   # Calculate indices.
   NDVI  <- calculate_NDVI(B4, B8) ;  SWI   <- calculate_SWI(B5, B11)
   NDWI  <- calculate_NDWI(B3, B8) ;  MNDWI <- calculate_MNDWI(B3, B11)
-  AWEI  <- calculate_AWEI(B2, B3, B8, B11, B12)
+  AWEI  <- calculate_AWEI(B3, B8, B11, B12)
   
   # Plot NDVI map.
   # raster::plot(NDVI)
@@ -114,27 +119,27 @@ for (tif_file in tif_files) {
   
   
   
-  # Save the raster
-  SWI_filename <- paste0(sub(".tif", "", basename(tif_file)), "_WWI.tif")
+  # List of raster objects and corresponding filenames
+  raster_list <- list(
+    list(raster_obj = NDVI, filename_suffix = "_NDVI"),
+    list(raster_obj = SWI, filename_suffix = "_SWI"),
+    list(raster_obj = NDWI, filename_suffix = "_NDWI"),
+    list(raster_obj = MNDWI, filename_suffix = "_MNDWI"),
+    list(raster_obj = AWEI, filename_suffix = "_AWEI")
+  )
   
-  raster::writeRaster(SWI, filename = file.path("./Output",SWI_filename),
-                      format = "GTiff", overwrite = TRUE)   
-  
-  
-  # Save the raster
-  NDWI_filename <- paste0(sub(".tif", "", basename(tif_file)), "_NDWI.tif")
-  
-  raster::writeRaster(NDWI, filename = file.path("./Output",NDWI_filename),
-                      format = "GTiff", overwrite = TRUE)  
-  
-  
-  
-  # Save the raster
-  NDVI_filename <- paste0(sub(".tif", "", basename(tif_file)), "_NDVI.tif")
-
-  raster::writeRaster(NDVI, filename = file.path("./Output",NDVI_filename),
-                      format = "GTiff", overwrite = TRUE)
-  
+  # Loop through the list and save the rasters
+  for (raster_info in raster_list) {
+    raster_obj <- raster_info$raster_obj
+    filename_suffix <- raster_info$filename_suffix
+    
+    # Create the full filename
+    full_filename <- paste0(sub(".tif", "", basename(tif_file)), filename_suffix, ".tif")
+    full_filepath <- file.path("./Output", full_filename)
+    
+    # Save the raster
+    raster::writeRaster(raster_obj, filename = full_filepath, format = "GTiff", overwrite = TRUE)
+  }
   
   
   
@@ -174,32 +179,54 @@ ggplot(NDVI_df, aes(x = Date, y = AvgNDVI)) +
 
 
 
-# Get a list of all tif files in the working directory
-NDVI_images <- list.files(path = "./Output",
-                        pattern = "\\.tif$",
-                        full.names = TRUE)
+# Function to get a list of TIF files with a specific suffix in the working directory
+get_tif_files <- function(suffix) {
+  list.files(path = "./Output", pattern = paste0("\\_",suffix, "\\.tif$"),
+             full.names = TRUE)
+}
+
+# Get lists of TIF files with different suffixes
+NDVI_images <- get_tif_files("NDVI")
+NDWI_images <- get_tif_files("NDWI")
+MNDWI_images <- get_tif_files("MNDWI")
+SWI_images <- get_tif_files("SWI")
+AWEI_images <- get_tif_files("AWEI")
 
 
-x = raster(NDVI_images[1])
 
-# Convert raster image to a data frame
-raster_df <- as.data.frame(x, xy = TRUE)
+# Function to create plots
+create_ndvi_plot <- function(image) {
+  x <- raster(image)
+  # Convert raster image to a data frame
+  raster_df <- as.data.frame(x, xy = TRUE)
+  
+  # Create the plot
+  p <- ggplot() +
+    # Add the raster image as a background
+    geom_raster(data = raster_df, aes(x = x, y = y, fill = raster_df[, 3])) +
+    scale_fill_viridis_c() +  # Use a color scale, you can change it as needed
+    # Add the GeoJSON polygon on top
+    geom_sf(data = AOIb, fill = "transparent", color = "red", size = 1) +
+    # Adjust the aspect ratio and theme as needed
+    coord_sf() +
+    theme_minimal()
+  # Export the plot as a PNG file
+  ggsave(filename = paste0("plot_", basename(image), ".png"), plot = p,
+         width = 10, height = 8, dpi = 300)
+  
+}
 
-AOIb <- sf::st_transform(AOIb, crs = sf::st_crs(x))
-# Convert the reprojected raster to a data frame
+# Function to create plots for raster images
+create_plots <- function(image_list, plot_function) {
+  lapply(image_list[1:5], plot_function)
+}
 
-
-# Create the plot
-ggplot() +
-  # Add the raster image as a background
-  geom_raster(data = raster_df, aes(x = x, y = y, fill = S2A2A_20220105_122_AOI_BOA_10_NDVI)) +
-  scale_fill_viridis_c() +  # Use a color scale, you can change it as needed
-  # Add the GeoJSON polygon on top
-  geom_sf(data = AOIb, fill = "transparent", color = "red", size = 1) +
-  # Adjust the aspect ratio and theme as needed
-  coord_sf() +
-  theme_minimal()
-
+# Call the function for each image list with its corresponding plot function
+create_plots(NDVI_images, create_ndvi_plot)
+create_plots(NDWI_images, create_ndwi_plot)
+create_plots(MNDWI_images, create_mndwi_plot)
+create_plots(SWI_images, create_swi_plot)
+create_plots(AWEI_images, create_awei_plot)
 
 
 

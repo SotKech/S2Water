@@ -41,7 +41,7 @@ AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 list <- sen2r::s2_list(
   tile = "32SPF",
   orbit = 122,
-  time_interval = c(as.Date("2023-01-01"), as.Date("2023-07-01")),              # (as.Date("2017-01-01"), as.Date("2023-07-01")
+  time_interval = c(as.Date("2017-01-01"), as.Date("2023-07-01")),              # (as.Date("2017-01-01"), as.Date("2023-07-01")
   level = "auto",
   server = "scihub",
   service = "apihub",
