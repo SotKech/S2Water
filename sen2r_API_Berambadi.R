@@ -58,8 +58,8 @@ expo <- sen2r(
   sel_sensor = c("s2a", "s2b"),
   server = "scihub",
   step_atmcorr = "auto", # means that L2A is first searched on SciHub: if found,
-                         # it is downloaded, if not, the corresponding Level-1C 
-                         # is downloaded and   sen2cor is used to produce L2
+                         #  it is downloaded, if not, the corresponding Level-1C 
+                         #     is downloaded and   sen2cor is used to produce L2
   # sen2cor_use_dem = F  #                                      may be the issue
   # sen2cor_gipp = NA,   #             Ground Image Processing Parameters (GIPP)
   max_cloud_safe = 10,
@@ -72,8 +72,8 @@ expo <- sen2r(
   list_rgb = c("RGB432B"),
   # list_indices = c("NDWI"),
   index_source = "BOA",
-  mask_type = NA,                                       # because of glint
-  max_mask = 10, 
+  mask_type = NA, # because of glint
+  # max_mask = 10, 
   clip_on_extent= TRUE,
   extent_as_mask= TRUE,
   # overwrite = TRUE
@@ -85,9 +85,4 @@ expo <- sen2r(
 ) ; end_time <- Sys.time()
 cat("Runtime: ", round(as.numeric(difftime(end_time,start_time, units = "min")),
                                                       digits = 3),"m", sep = "")
-
-
-
-
-
 
