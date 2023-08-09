@@ -41,7 +41,7 @@ AOI <- sf::st_read("./Data/Berambadi_AOI.geojson")
 list <- sen2r::s2_list(
   tile = "43PFP",
   orbit = 062,
-  time_interval = c(as.Date("2023-01-01"), as.Date("2023-08-08")),
+  time_interval = c(as.Date("2022-01-01"), as.Date("2023-01-01")),
   level = "auto",
   server = "scihub",
   service = "apihub",
@@ -63,17 +63,17 @@ expo <- sen2r(
   # sen2cor_use_dem = F  #                                      may be the issue
   # sen2cor_gipp = NA,   #             Ground Image Processing Parameters (GIPP)
   max_cloud_safe = 10,
-  timewindow = c(as.Date("2023-01-01"), as.Date("2023-08-08")),
+  timewindow = c(as.Date("2022-01-01"), as.Date("2023-01-01")),
   extent = AOI,
   extent_name = "AOI",
   s2tiles_selected = c("43PFP"),
   s2orbits_selected = c("062"),
   list_prods = c("BOA"),
   list_rgb = c("RGB432B"),
-  # list_indices = c("NDWI"),
+  # list_indices = c("NDWI", "NDWI2"),
   index_source = "BOA",
-  mask_type = NA, # because of glint
-  # max_mask = 10, 
+  # mask_type = NA, # because of glint
+  max_mask = 100, 
   clip_on_extent= TRUE,
   extent_as_mask= TRUE,
   # overwrite = TRUE
