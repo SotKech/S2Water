@@ -58,7 +58,7 @@ def images_date(imgs_date_all):
 
 a = images_date(feat_imgs)
 
-# %% Connection to the server
+# Connection to the server
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -75,7 +75,7 @@ def get_token(config_file="config_theia.cfg"):
     return token
 
 
-# %% Download Images
+# Download Images
 
 for vns_date in feat_imgs:
     picture_name = vns_date["productIdentifier"]
