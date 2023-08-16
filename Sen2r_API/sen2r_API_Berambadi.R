@@ -24,9 +24,9 @@ for (package in neededPackages){pkgTest(package)}
 
 #### Data Preparation ####
 # Create directories
-# setwd("D:/Sotirios_Kechagias/S2Water")       # ("C:/Projects/S2Water")
+setwd("D:/Sotirios_Kechagias/S2Water")       # ("C:/Projects/S2Water")
 getwd()                                        # check working directory
-setwd('..')                                    # Go back one level
+# setwd('..')                                    # Go back one level
 data_path   <- "./Data"
 output_path <- "./Output"
 if (!dir.exists(data_path))   {dir.create(data_path)}
@@ -41,7 +41,7 @@ list <- sen2r::s2_list(
   tile =          "43PFP",
   orbit =         062,
   time_interval = c(as.Date("2019-01-01"),
-                    as.Date("2022-01-01")),
+                    as.Date("2020-01-01")),
   level =         "auto",
   server =        "scihub",
   service =       "apihub",
@@ -64,7 +64,7 @@ expo <- sen2r(
   # sen2cor_gipp =    NA,        
   max_cloud_safe =    10,
   timewindow =        c(as.Date("2019-01-01"),
-                        as.Date("2022-01-01")),
+                        as.Date("2020-01-01")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("43PFP"),

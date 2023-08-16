@@ -1,9 +1,16 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
+            .o88o.   .oPYo.   8      8           8               
+            8            `8   8      8           8               
+            `Yooo.      oP'   8      8  .oPYo.  o8P .o88o.  oPYo.
+                `8   .oP'     8  db  8  .oooo8   8  8oooo8  8  `'
+                 8   8'       `b.PY.d'  8    8   8  8       8
+            `Y88P'   8ooooo    `8  8'   `YooP8   8  `8ooo'  8
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 Created on Wed Apr 12 15:29:44 2023
 @author: merleth
 """
+
 # Import packages
 import pathlib
 import json
