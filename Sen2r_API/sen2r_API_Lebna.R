@@ -24,9 +24,9 @@ for (package in neededPackages){pkgTest(package)}
 
 #### Data Preparation ####
 # Create directories
-# setwd("D:/Sotirios_Kechagias/S2Water")       # ("C:/Projects/S2Water")
+setwd("C:/Projects/S2Water")       # ("C:/Projects/S2Water")
 getwd()                                        # check working directory
-setwd('..')                                    # Go back one level
+# setwd('..')                                    # Go back one level
 data_path   <- "./Data"
 output_path <- "./Output"
 if (!dir.exists(data_path))   {dir.create(data_path)}
@@ -38,17 +38,17 @@ safe_dir <- tempfile(pattern = "sen2r_safe_")  # folder to store downloaded SAFE
 AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 
 list <- sen2r::s2_list(
-  tile =          "32SFP",
+  tile =          "32SPF",
   orbit =         122,
-  time_interval = c(as.Date("2019-01-01"),
-                    as.Date("2022-01-01")),
+  time_interval = c(as.Date("2022-06-01"),
+                    as.Date("2023-01-01")),
   level =         "auto",
   server =        "scihub",
   service =       "apihub",
   max_cloud =     10,
   availability =  "check",
   output_type =   "deprecated"
-)  ; my_df <- as.data.frame(list) ; write.csv(my_df, "./Berambadi.csv")
+)  ; my_df <- as.data.frame(list) ; write.csv(my_df, "./Lebna.csv")
 
 sen2r::s2_order(list)
 
@@ -63,11 +63,11 @@ expo <- sen2r(
   # sen2cor_use_dem = F       # This produce Level 2AP
   # sen2cor_gipp =    NA,        
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2019-01-01"),
-                        as.Date("2022-01-01")),
+  timewindow =        c(as.Date("2022-01-01"),
+                        as.Date("2023-01-01")),
   extent =            AOI,
   extent_name =       "AOI",
-  s2tiles_selected =  c("32SFP"),
+  s2tiles_selected =  c("32SPF"),
   s2orbits_selected = c("122"),
   list_prods =        c("BOA"),
   list_rgb =          c("RGB432B"),
