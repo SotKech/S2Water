@@ -44,7 +44,7 @@ list <- sen2r::s2_list(
                     as.Date("2020-01-01")),
   level =         "auto",
   server =        "scihub",
-  service =       "apihub",
+  # service =       "apihub",
   max_cloud =     10,
   availability =  "check",
   output_type =   "deprecated"
