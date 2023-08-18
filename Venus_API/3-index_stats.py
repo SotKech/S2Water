@@ -12,7 +12,7 @@ import pandas as pd
 import geopandas as gpd
 import xarray as xr
 import rioxarray as rioxr
-import spyndex
+import spyndex ####<-
 import numpy as np
 from datetime import datetime
 from dask.distributed import LocalCluster, Client
