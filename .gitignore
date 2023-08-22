@@ -1,6 +1,11 @@
-.Rproj.user
-.Rhistory
+.idea/
 .RData
+.Rhistory
+.Rproj.user
 .Ruserdata
-.Lebna.csv
-.Output/
+Data/.ignorelist.txt
+Data/BOA
+Data/RGB432B
+Lebna.csv
+Output
+Venus_API/venus_zip
