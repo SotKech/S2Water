@@ -36,7 +36,7 @@ setwd("C:/Projects/S2Water")
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 
-AOIb <- sf::st_read("./Data/Lebna_reservoir_buffered.geojson")
+AOIb <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
 ############################## Indices functions ###############################
 
@@ -67,20 +67,9 @@ calculate_AWEI <- function(B3, B8, B11, B12) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # Create an empty list to store average NDVI values for each image
 NDVI_avg_list <- list()
-# Initialize an empty data frame to store filenames and NDVI values
+# Initialize an empty data frame to store file names and NDVI values
 NDVI_df <- data.frame(FileName = character(), NDVI = numeric(),
                       Date = character())
 
@@ -149,12 +138,6 @@ for (tif_file in tif_files) {
 }
 
 
-
-
-
-
-
-
 # Convert the NDVI_avg_list to a data frame and extract the date from filenames
 NDVI_df <- data.frame(FileName = names(NDVI_avg_list),
                       AvgNDVI = unlist(NDVI_avg_list))
@@ -186,47 +169,59 @@ get_tif_files <- function(suffix) {
 }
 
 # Get lists of TIF files with different suffixes
-NDVI_images <- get_tif_files("NDVI")
-NDWI_images <- get_tif_files("NDWI")
-MNDWI_images <- get_tif_files("MNDWI")
-SWI_images <- get_tif_files("SWI")
+NDVI_images <- get_tif_files("NDVI")   ; NDWI_images <- get_tif_files("NDWI")
+MNDWI_images <- get_tif_files("MNDWI") ; SWI_images <- get_tif_files("SWI")
 AWEI_images <- get_tif_files("AWEI")
 
-
-
-# Function to create plots
-create_ndvi_plot <- function(image) {
-  x <- raster(image)
-  # Convert raster image to a data frame
+# Function to create and export raster plots
+create_raster_plot <- function(image, fill_colors, fill_name) {
+  x <- raster(image)                      # Convert raster image to a data frame
   raster_df <- as.data.frame(x, xy = TRUE)
-  
-  # Create the plot
-  p <- ggplot() +
-    # Add the raster image as a background
+  p <- ggplot() +                                              # Create the plot
     geom_raster(data = raster_df, aes(x = x, y = y, fill = raster_df[, 3])) +
-    scale_fill_viridis_c() +  # Use a color scale, you can change it as needed
-    # Add the GeoJSON polygon on top
+    scale_fill_gradientn(
+      colors = fill_colors,
+      limits = c(-1, 1),
+      na.value = "transparent",
+      breaks = c(-1, -0.5, 0, 0.5, 1),
+    ) +
     geom_sf(data = AOIb, fill = "transparent", color = "red", size = 1) +
-    # Adjust the aspect ratio and theme as needed
     coord_sf() +
-    theme_minimal()
-  # Export the plot as a PNG file
-  ggsave(filename = paste0("plot_", basename(image), ".png"), plot = p,
-         width = 10, height = 8, dpi = 300)
-  
+    theme_minimal() +
+    labs(
+      title = as.Date(substr(basename(image), 7, 14), format = "%Y%m%d"),
+      fill = fill_name
+    ) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    xlab("") +
+    ylab("")
+  ggsave(                                        # Export the plot as a PNG file
+    filename = paste0("plot_", basename(image), ".png"),
+    plot = p, width = 10,  height = 10, dpi = 300, bg = "white"
+  )
+  return(p)
 }
 
 # Function to create plots for raster images
-create_plots <- function(image_list, plot_function) {
-  lapply(image_list[1:5], plot_function)
+create_plots <- function(image_list, plot_function, fill_colors, fill_name) {
+  lapply(image_list[1:3], function(image) {
+    plot_function(image, fill_colors, fill_name)
+  })
 }
 
-# Call the function for each image list with its corresponding plot function
-create_plots(NDVI_images, create_ndvi_plot)
-create_plots(NDWI_images, create_ndwi_plot)
-create_plots(MNDWI_images, create_mndwi_plot)
-create_plots(SWI_images, create_swi_plot)
-create_plots(AWEI_images, create_awei_plot)
+# Define the fill colors and fill names for NDVI and NDWI
+ndvi_fill_colors <- c("red", "red", "orange", "green", "darkgreen")
+other_fill_colors <- c("darkgreen" ,"green", "white", "blue", "blue")
 
+
+# Call the create_plots function with the appropriate arguments
+create_plots(NDVI_images, create_raster_plot, ndvi_fill_colors, "NDVI")
+create_plots(NDWI_images, create_raster_plot, other_fill_colors, "NDWI")
+create_plots(MNDWI_images, create_raster_plot, other_fill_colors, "MNDWI")
+create_plots(SWI_images, create_raster_plot, other_fill_colors, "SWI")
+create_plots(AWEI_images, create_raster_plot, other_fill_colors, "AWEI")
+
+#create_plots(SWI_images, create_ndvi_plot)
+#create_plots(AWEI_images, create_ndvi_plot)
 
 

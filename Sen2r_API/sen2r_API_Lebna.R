@@ -40,8 +40,8 @@ AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 list <- sen2r::s2_list(
   tile =          "32SPF",
   orbit =         122,
-  time_interval = c(as.Date("2022-01-01"),
-                    as.Date("2023-01-01")),
+  time_interval = c(as.Date("2021-06-01"),
+                    as.Date("2022-01-01")),
   level =         "auto",
   server =        "scihub",
   service =       "apihub",
@@ -63,8 +63,8 @@ expo <- sen2r(
   # sen2cor_use_dem = F       # This produce Level 2AP
   # sen2cor_gipp =    NA,        
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2022-01-01"),
-                        as.Date("2023-01-01")),
+  timewindow =        c(as.Date("2021-06-01"),
+                        as.Date("2022-01-01")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("32SPF"),

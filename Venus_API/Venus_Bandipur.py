@@ -70,11 +70,11 @@ if not (pathlib.Path(raw_data)).exists():
 # %% Search for images
 URL = "https://theia.cnes.fr/atdistrib/resto2/api/collections/VENUSVM05/search.json"
 param = {"processingLevel": "LEVEL2A",
-         "startDate": "2023-01-01",
-         "completionDate": "2023-08-01",
-         "location": "BANDIPUR",
+         "startDate": "2017-01-01",
+         "completionDate": "2023-07-01",
+         "location": "LEBNA",
          "maxRecords": 500,
-         "cloudCover": "[0,50]"}
+         "cloudCover": "[0,40]"}
 req = requests.get(URL, params=param)
 if req.ok:
     req_imgs = json.loads(req.content)
@@ -92,14 +92,14 @@ for vns_date in feat_imgs:
     image_info_list.append(vns_date)
 image_df = pd.DataFrame(image_info_list)
 print(image_df.head())
-image_df.to_csv("./BANDIPUR.csv", sep=",")
-
-# %% Download Images
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # Connection to the server
-i = 0
-for vns_date in feat_imgs:
-    i += 1
-    download_images(vns_date, raw_data)
-    percentage = (i / (len(feat_imgs))) * 100
-    print(f"\rProgress: {percentage:.2f}% \n", end='', flush=True)
-
+image_df.to_csv("./LEBNA.csv", sep=",")
+#
+# # %% Download Images
+# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  # Connection to the server
+# i = 0
+# for vns_date in feat_imgs:
+#     i += 1
+#     download_images(vns_date, raw_data)
+#     percentage = (i / (len(feat_imgs))) * 100
+#     print(f"\rProgress: {percentage:.2f}% \n", end='', flush=True)
+#
