@@ -1,3 +1,4 @@
+################################################################################
 #                      MGI Internship  :   S2Water
 #                      Author          :   Sotirios Kechagias
 #                      Created         :   July 21, 2023
@@ -55,12 +56,12 @@ calculate_AWEI <- function(B3, B8, B11, B12) {                         # AWEInsh
 
 ################################################################################
 
-# Create an empty list to store average NDVI values for each image.
-NDVI_avg_list <- list()
-# Initialize an empty data frame to store file names and NDVI values.
-NDVI_df <- data.frame(FileName = character(),
-                      NDVI = numeric(),
-                      Date = character())
+# # Create an empty list to store average NDVI values for each image.
+# NDVI_avg_list <- list()
+# # Initialize an empty data frame to store file names and NDVI values.
+# NDVI_df <- data.frame(FileName = character(),
+#                       NDVI = numeric(),
+#                       Date = character())
 
 
 i = 0
@@ -73,7 +74,7 @@ for (tif_file in tif_files) {
   image <- raster::stack(tif_file)
   
   # Extract the necessary bands.
-  B3  <- image[[3]] ; B4  <- image[[4]]  ; B5  <- image[[5]]
+  B3  <- image[[3]] ; B4  <- image[[4]]  ;  B5  <- image[[5]]
   B8  <- image[[8]] ; B11 <- image[[10]] ;  B12 <- image[[11]]
   # NOTE: (Sen2r issue) Band 10 is missing from Level-2A products thus bands 8 
   # and 8a are alternatively present (band 8 if the output resolution is < 20m,
@@ -89,11 +90,11 @@ for (tif_file in tif_files) {
   
   # List of raster objects and corresponding file names.
   raster_list <- list(
-    list(raster_obj = NDVI, filename_suffix = "_NDVI"),
-    list(raster_obj = SWI, filename_suffix = "_SWI"),
-    list(raster_obj = NDWI, filename_suffix = "_NDWI"),
+    list(raster_obj = NDVI,  filename_suffix = "_NDVI"),
+    list(raster_obj = SWI,   filename_suffix = "_SWI"),
+    list(raster_obj = NDWI,  filename_suffix = "_NDWI"),
     list(raster_obj = MNDWI, filename_suffix = "_MNDWI"),
-    list(raster_obj = AWEI, filename_suffix = "_AWEI")
+    list(raster_obj = AWEI,  filename_suffix = "_AWEI")
   )
   
   # Loop through the list and save the rasters.
@@ -111,27 +112,25 @@ for (tif_file in tif_files) {
                         format = "GTiff", overwrite = FALSE)
   }
   
-  
-  
-  # Add NDVI values and filename to the data frame
-  date_str <- substr(basename(tif_file), 7, 14)
-  NDVI_avg_list[[basename(tif_file)]] <- avg_NDVI
+  # # Add NDVI values and filename to the data frame
+  # date_str <- substr(basename(tif_file), 7, 14)
+  # NDVI_avg_list[[basename(tif_file)]] <- avg_NDVI
 }
 
 
-# Convert the NDVI_avg_list to a data frame and extract the date from filenames
-NDVI_df <- data.frame(FileName = names(NDVI_avg_list),
-                      AvgNDVI = unlist(NDVI_avg_list))
-
-# Extract the date from the filename
-NDVI_df$Date <- as.Date(substr(NDVI_df$FileName, 7, 14), format = "%Y%m%d")
-
-# Create the graph
-ggplot(NDVI_df, aes(x = Date, y = AvgNDVI)) +
-  geom_line() +
-  labs(title = "Average NDVI Through Time",
-       x = "Date",
-       y = "Average NDVI")
+# # Convert the NDVI_avg_list to a data frame and extract the date from filenames
+# NDVI_df <- data.frame(FileName = names(NDVI_avg_list),
+#                       AvgNDVI = unlist(NDVI_avg_list))
+# 
+# # Extract the date from the filename
+# NDVI_df$Date <- as.Date(substr(NDVI_df$FileName, 7, 14), format = "%Y%m%d")
+# 
+# # Create the graph
+# ggplot(NDVI_df, aes(x = Date, y = AvgNDVI)) +
+#   geom_line() +
+#   labs(title = "Average NDVI Through Time",
+#        x = "Date",
+#        y = "Average NDVI")
 
 
 
