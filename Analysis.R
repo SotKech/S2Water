@@ -1,14 +1,14 @@
-#                                                                              #
-#               {}|{}                                                          #
-#               /o|o\                                                          #
-#  ___________:/o|||o\}___________    MGI Internship  | S2Water                #
-#   =|=|=|=|:S|":|||:"|K:|=|=|=|=     Author          : Sotirios Kechagias     #
-#    """"""""""\:|||:/""""""""""      Created         : July 21, 2023          #
-#               \.|./                 Last update     : July 27, 2023          #
-#               /o.o\                 R Version       : 4.3.1                  #
-#              /o.o.o\                LICENSE         : CC BY-NC-SA 4.0        #
-#             |o.o.o.o|                                                        #
-#                                                                              #
+#                                                                              
+#               {}|{}                                                          
+#               /o|o\                                                          
+#  ___________:/o|||o\}___________    MGI Internship  | S2Water                
+#   =|=|=|=|:S|":|||:"|K:|=|=|=|=     Author          : Sotirios Kechagias     
+#    """"""""""\:|||:/""""""""""      Created         : July 21, 2023          
+#               \.|./                 Last update     : August 28, 2023        
+#               /o.o\                 R Version       : 4.3.1                  
+#              /o.o.o\                LICENSE         : CC BY-NC-SA 4.0        
+#             |o.o.o.o|                                                        
+#                                                                              
 ################################ Package Import ################################
 
 pkgTest <- function(x) { #     pkgTest is a helper function to load packages and
@@ -61,19 +61,18 @@ calculate_MNDWI <- function(B3, B11) {
 }
 
 calculate_AWEI <- function(B3, B8, B11, B12) {              
-  AWEI <- 4 * (B3 - B11) - 0.25 * B8 - 2.75 * B12              # This is AWEInsh
+  AWEI <- 4 * (B3 - B11) - (0.25 * B8 - 2.75 * B12)            # This is AWEInsh
   return(AWEI)      # Also AWEIsh: B2 + 2.5 * B3 - 1.5 * (B8 + B11) - 0.25 * B12
 }
 
-
+################################################################################
 
 # Create an empty list to store average NDVI values for each image
 NDVI_avg_list <- list()
 # Initialize an empty data frame to store file names and NDVI values
-NDVI_df <- data.frame(FileName = character(), NDVI = numeric(),
+NDVI_df <- data.frame(FileName = character(),
+                      NDVI = numeric(),
                       Date = character())
-
-
 
 
 i = 0
@@ -97,16 +96,6 @@ for (tif_file in tif_files) {
   NDVI  <- calculate_NDVI(B4, B8) ;  SWI   <- calculate_SWI(B5, B11)
   NDWI  <- calculate_NDWI(B3, B8) ;  MNDWI <- calculate_MNDWI(B3, B11)
   AWEI  <- calculate_AWEI(B3, B8, B11, B12)
-  
-  # Plot NDVI map.
-  # raster::plot(NDVI)
-  # NDVI_filename <- paste0(sub(".tif", "", basename(tif_file)), "_NDVI.png")
-  # dev.copy(png, NDVI_filename) ; dev.off()
-  
-  # Calculate the average NDVI for the entire image
-  avg_NDVI <- cellStats(NDVI, mean)
-  
-  
   
   # List of raster objects and corresponding filenames
   raster_list <- list(
@@ -153,13 +142,7 @@ ggplot(NDVI_df, aes(x = Date, y = AvgNDVI)) +
        y = "Average NDVI")
 
 
-
-
-
-
 # ///
-
-
 
 
 # Function to get a list of TIF files with a specific suffix in the working directory
@@ -174,14 +157,14 @@ MNDWI_images <- get_tif_files("MNDWI") ; SWI_images <- get_tif_files("SWI")
 AWEI_images <- get_tif_files("AWEI")
 
 # Function to create and export raster plots
-create_raster_plot <- function(image, fill_colors, fill_name) {
+create_raster_plot <- function(image, fill_colors, fill_name, lim) {
   x <- raster(image)                      # Convert raster image to a data frame
   raster_df <- as.data.frame(x, xy = TRUE)
   p <- ggplot() +                                              # Create the plot
     geom_raster(data = raster_df, aes(x = x, y = y, fill = raster_df[, 3])) +
     scale_fill_gradientn(
       colors = fill_colors,
-      limits = c(-1, 1),
+      limits = lim,
       na.value = "transparent",
       breaks = c(-1, -0.5, 0, 0.5, 1),
     ) +
@@ -196,7 +179,7 @@ create_raster_plot <- function(image, fill_colors, fill_name) {
     xlab("") +
     ylab("")
   ggsave(                                        # Export the plot as a PNG file
-    filename = paste0("plot_", basename(image), ".png"),
+    filename = paste0("./Output/Plots/plot_", basename(image), ".png"),
     plot = p, width = 10,  height = 10, dpi = 300, bg = "white"
   )
   return(p)
@@ -212,16 +195,14 @@ create_plots <- function(image_list, plot_function, fill_colors, fill_name) {
 # Define the fill colors and fill names for NDVI and NDWI
 ndvi_fill_colors <- c("red", "red", "orange", "green", "darkgreen")
 other_fill_colors <- c("darkgreen" ,"green", "white", "blue", "blue")
+limits <- c(-1, 1) ; AWEI_limits <- c(-10, 10)
 
 
 # Call the create_plots function with the appropriate arguments
-create_plots(NDVI_images, create_raster_plot, ndvi_fill_colors, "NDVI")
-create_plots(NDWI_images, create_raster_plot, other_fill_colors, "NDWI")
-create_plots(MNDWI_images, create_raster_plot, other_fill_colors, "MNDWI")
-create_plots(SWI_images, create_raster_plot, other_fill_colors, "SWI")
-create_plots(AWEI_images, create_raster_plot, other_fill_colors, "AWEI")
-
-#create_plots(SWI_images, create_ndvi_plot)
-#create_plots(AWEI_images, create_ndvi_plot)
+create_plots(NDVI_images, create_raster_plot, ndvi_fill_colors, "NDVI", limits)
+create_plots(NDWI_images, create_raster_plot, other_fill_colors, "NDWI", limits)
+create_plots(MNDWI_images, create_raster_plot, other_fill_colors, "MNDWI", limits)
+create_plots(SWI_images, create_raster_plot, other_fill_colors, "SWI",limits)
+create_plots(AWEI_images, create_raster_plot, other_fill_colors, "AWEI", AWEI_limits)
 
 
