@@ -1,42 +1,34 @@
-#                                                                              
-#               {}|{}                                                          
-#               /o|o\                                                          
-#  ___________:/o|||o\}___________    MGI Internship  | S2Water                
-#   =|=|=|=|:S|":|||:"|K:|=|=|=|=     Author          : Sotirios Kechagias     
-#    """"""""""\:|||:/""""""""""      Created         : July 21, 2023          
-#               \.|./                 Last update     : August 28, 2023        
-#               /o.o\                 R Version       : 4.3.1                  
-#              /o.o.o\                LICENSE         : CC BY-NC-SA 4.0        
-#             |o.o.o.o|                                                        
-#                                                                              
+#                      MGI Internship  :   S2Water
+#                      Author          :   Sotirios Kechagias
+#                      Created         :   July 21, 2023
+#                      Last update     :   August 28, 2023
+#                      R Version       :   4.3.1
+#                      LICENSE         :   CC BY-NC-SA 4.0
+#
 ################################ Package Import ################################
 
-pkgTest <- function(x) { #     pkgTest is a helper function to load packages and
-                         # install packages only when they are not installed yet
+pkgTest <- function(x) { #         pkgTest is a function that loads packages and 
+                         #  installs them  only when they are not installed yet.
   if (x %in% rownames(installed.packages()) == FALSE) {
     install.packages(x, dependencies= TRUE)
   }
   library(x, character.only = TRUE)
 }
 
-neededPackages <- c("raster", "ggplot2", "sf")
+neededPackages <- c("raster", "ggplot2", "sf")              # Necessary Packages
 
 for (package in neededPackages) {
   pkgTest(package)
 }
 
 ############################## Set up directories ##############################
-# Set working directory.
-setwd("C:/Projects/S2Water")
-
-# plots_directory <- "./Output/Plots"
-# if (!dir.exists(plots_directory))   {dir.create(plots_directory)}
-
-# Get a list of all tif files in the working directory.
+# setwd("C:/Projects/S2Water") # Set working directory.
+getwd()
+# Get a list of all TIF files in the working directory.
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 
-AOIb <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
 ############################## Indices functions ###############################
 
@@ -44,42 +36,37 @@ calculate_NDVI <- function(B4, B8) {
   NDVI <- (B8 - B4) / (B8 + B4)
   return(NDVI)
 }
-
 calculate_SWI <- function(B5, B11) {
   SWI <- (B5 - B11) / (B5 + B11)
   return(SWI)
 }
-
 calculate_NDWI <- function(B3, B8) {
-  NDWI <- (B3 - B8)/(B3 + B8)
+  NDWI <- (B3 - B8) / (B3 + B8)
   return(NDWI)
 }
-
 calculate_MNDWI <- function(B3, B11) {
-  MNDWI <- (B3 - B11)/(B3 + B11)
+  MNDWI <- (B3 - B11) / (B3 + B11)
   return(MNDWI)
 }
-
-calculate_AWEI <- function(B3, B8, B11, B12) {              
-  AWEI <- 4 * (B3 - B11) - (0.25 * B8 - 2.75 * B12)            # This is AWEInsh
+calculate_AWEI <- function(B3, B8, B11, B12) {                         # AWEInsh          
+  AWEI <- (0.004 * (B3 - B11) - (0.00025 * B8 + 0.00275 * B12))        
   return(AWEI)      # Also AWEIsh: B2 + 2.5 * B3 - 1.5 * (B8 + B11) - 0.25 * B12
 }
 
 ################################################################################
 
-# Create an empty list to store average NDVI values for each image
+# Create an empty list to store average NDVI values for each image.
 NDVI_avg_list <- list()
-# Initialize an empty data frame to store file names and NDVI values
+# Initialize an empty data frame to store file names and NDVI values.
 NDVI_df <- data.frame(FileName = character(),
                       NDVI = numeric(),
                       Date = character())
 
 
 i = 0
-# Loop through each tif file
+# Loop through each TIF files
 for (tif_file in tif_files) {
-  # Create progression bar.
-  i = i + 1
+  i = i + 1                                            # Create progression bar.
   j = round((i/as.double(length(tif_files))*100), 2) ; cat(paste0("\r", j, "%"))
   
   # Load the image
@@ -97,7 +84,10 @@ for (tif_file in tif_files) {
   NDWI  <- calculate_NDWI(B3, B8) ;  MNDWI <- calculate_MNDWI(B3, B11)
   AWEI  <- calculate_AWEI(B3, B8, B11, B12)
   
-  # List of raster objects and corresponding filenames
+  # Calculate the average NDVI for the entire image.
+  avg_NDVI <- raster::cellStats(NDVI, mean)
+  
+  # List of raster objects and corresponding file names.
   raster_list <- list(
     list(raster_obj = NDVI, filename_suffix = "_NDVI"),
     list(raster_obj = SWI, filename_suffix = "_SWI"),
@@ -106,17 +96,19 @@ for (tif_file in tif_files) {
     list(raster_obj = AWEI, filename_suffix = "_AWEI")
   )
   
-  # Loop through the list and save the rasters
+  # Loop through the list and save the rasters.
   for (raster_info in raster_list) {
     raster_obj <- raster_info$raster_obj
     filename_suffix <- raster_info$filename_suffix
     
-    # Create the full filename
-    full_filename <- paste0(sub(".tif", "", basename(tif_file)), filename_suffix, ".tif")
+    # Create the full file name.
+    full_filename <- paste0(sub(".tif", "", basename(tif_file)),
+                            filename_suffix, ".tif")
     full_filepath <- file.path("./Output", full_filename)
     
-    # Save the raster
-    raster::writeRaster(raster_obj, filename = full_filepath, format = "GTiff", overwrite = TRUE)
+    # Save raster.
+    raster::writeRaster(raster_obj, filename = full_filepath,
+                        format = "GTiff", overwrite = FALSE)
   }
   
   
@@ -142,42 +134,58 @@ ggplot(NDVI_df, aes(x = Date, y = AvgNDVI)) +
        y = "Average NDVI")
 
 
-# ///
 
 
-# Function to get a list of TIF files with a specific suffix in the working directory
-get_tif_files <- function(suffix) {
-  list.files(path = "./Output", pattern = paste0("\\_",suffix, "\\.tif$"),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################### Plotting ###################################
+
+get_tif_files <- function(suffix) {              # Function to get a list of TIF
+  list.files(path = "./Output",
+             pattern = paste0("\\_",suffix, "\\.tif$"),
              full.names = TRUE)
 }
 
 # Get lists of TIF files with different suffixes
-NDVI_images <- get_tif_files("NDVI")   ; NDWI_images <- get_tif_files("NDWI")
-MNDWI_images <- get_tif_files("MNDWI") ; SWI_images <- get_tif_files("SWI")
-AWEI_images <- get_tif_files("AWEI")
+NDVI_images  <- get_tif_files("NDVI")   ; NDWI_images <- get_tif_files("NDWI")
+MNDWI_images <- get_tif_files("MNDWI")  ; SWI_images  <- get_tif_files("SWI")
+AWEI_images  <- get_tif_files("AWEI")
 
 # Function to create and export raster plots
-create_raster_plot <- function(image, fill_colors, fill_name, lim) {
+create_raster_plot <- function(image, fill_colors, index, lim, brk) {
   x <- raster(image)                      # Convert raster image to a data frame
   raster_df <- as.data.frame(x, xy = TRUE)
-  p <- ggplot() +                                              # Create the plot
+  p <- ggplot() +
     geom_raster(data = raster_df, aes(x = x, y = y, fill = raster_df[, 3])) +
     scale_fill_gradientn(
       colors = fill_colors,
       limits = lim,
       na.value = "transparent",
-      breaks = c(-1, -0.5, 0, 0.5, 1),
+      breaks = brk,
     ) +
-    geom_sf(data = AOIb, fill = "transparent", color = "red", size = 1) +
+    geom_sf(data = AOI_b, fill = "transparent", color = "red", size = 1) +
     coord_sf() +
     theme_minimal() +
     labs(
       title = as.Date(substr(basename(image), 7, 14), format = "%Y%m%d"),
-      fill = fill_name
+      fill = index
     ) +
     theme(plot.title = element_text(hjust = 0.5)) +
     xlab("") +
     ylab("")
+  
   ggsave(                                        # Export the plot as a PNG file
     filename = paste0("./Output/Plots/plot_", basename(image), ".png"),
     plot = p, width = 10,  height = 10, dpi = 300, bg = "white"
@@ -186,23 +194,22 @@ create_raster_plot <- function(image, fill_colors, fill_name, lim) {
 }
 
 # Function to create plots for raster images
-create_plots <- function(image_list, plot_function, fill_colors, fill_name) {
-  lapply(image_list[1:3], function(image) {
-    plot_function(image, fill_colors, fill_name)
+create_plots <- function(img_list, plot_function, fill_colors, index, lim, brk){
+  lapply(img_list[1:3], function(image) {
+    plot_function(image, fill_colors, index, lim, brk)
   })
 }
 
 # Define the fill colors and fill names for NDVI and NDWI
-ndvi_fill_colors <- c("red", "red", "orange", "green", "darkgreen")
-other_fill_colors <- c("darkgreen" ,"green", "white", "blue", "blue")
-limits <- c(-1, 1) ; AWEI_limits <- c(-10, 10)
-
+ndvi_col <- c("red", "red", "orange", "green", "darkgreen")
+other_cols <- c("darkgreen" ,"green", "white", "blue", "blue")
+lims <- c(-1, 1)        ; brks <- c(-1, -0.5, 0, 0.5, 1)
+AWEI_lims <- c(-20, 20) ; AWEI_brks <- c(-20, -10, 0, 10, 20)
 
 # Call the create_plots function with the appropriate arguments
-create_plots(NDVI_images, create_raster_plot, ndvi_fill_colors, "NDVI", limits)
-create_plots(NDWI_images, create_raster_plot, other_fill_colors, "NDWI", limits)
-create_plots(MNDWI_images, create_raster_plot, other_fill_colors, "MNDWI", limits)
-create_plots(SWI_images, create_raster_plot, other_fill_colors, "SWI",limits)
-create_plots(AWEI_images, create_raster_plot, other_fill_colors, "AWEI", AWEI_limits)
-
-
+create_plots(NDVI_images,  create_raster_plot, ndvi_col,   "NDVI",  lims, brks)
+create_plots(NDWI_images,  create_raster_plot, other_cols, "NDWI",  lims, brks)
+create_plots(MNDWI_images, create_raster_plot, other_cols, "MNDWI", lims, brks)
+create_plots(SWI_images,   create_raster_plot, other_cols, "SWI",   lims, brks)
+create_plots(AWEI_images,  create_raster_plot, other_cols, "AWEI",  AWEI_lims,
+             AWEI_brks)
