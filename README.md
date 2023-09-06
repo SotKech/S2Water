@@ -32,9 +32,8 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
+* [![Sen2r][Sen2r.js]][Sen2r-url]
+* theia_download
 
 
 
@@ -96,34 +95,21 @@ Don't forget to give the project a star! Thanks again!
 
 <!-- LICENSE -->
 ## License
-
-Distributed under the CC BY-NC-SA 4.0 License. See `License.txt` for more information.
-
+Distributed under the CC BY-NC-SA 4.0 License. See `License.md` for more information.
 
 <!-- CONTACT -->
 ## Contact
-
 Sotirios Kechagias -  sot.kechagias@gmail.com
-
 Project Link: [https://github.com/SotKech/S2Water/](https://github.com/SotKech/S2Water/)
-
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
-
 * []()
 * []()
 * []()
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
 [product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
+[Sen2r.js]: https://luigi.ranghetti.info/img/sen2r_logo_200px.png
+[Sen2r-url]: https://github.com/ranghetti/sen2r/tree/main
