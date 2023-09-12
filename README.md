@@ -1,19 +1,11 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-
+<!-- Based on Best-README-Template. -->
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/SotKech/S2Water/">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngplay.com%2Fwp-content%2Fuploads%2F1%2FLetter-S-PNG-Photo.png&f=1&nofb=1&ipt=676c17b6eed1fbff95ce152952826d3574d8909f253b9424883625d7b3bff3c3&ipo=images" width="80" height="80">
   </a>
 <h3 align="center">S2Water</h3>
 </div>
@@ -29,14 +21,50 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 
 
+<!-- BUILT WITH-->
+## Built With
+<a href="https://github.com/ranghetti/sen2r/tree/main">
+  <img src= https://luigi.ranghetti.info/img/sen2r_logo_200px.png width="100" height=65">
+</a>
+<br />
+<a href="https://github.com/olivierhagolle/theia_download">
+  theia_download
+</a>
 
-### Built With
-
-* [![Sen2r][Sen2r.js]][Sen2r-url]
-* theia_download
-
-
-
+<!-- STRACTURE -->
+## Stracture
+```bash
+S2Water
+├── Data/
+│   ├── BOA/
+│   ├── RGB/
+│   ├── Berambadi_AOI.geojson
+│   ├── Berambadi_catchment_boundary.geojson
+│   ├── Berambadi_reservoirs.geojson
+│   ├── Lebna_catchment_boundaries.geojson
+│   └── Lebna_reservoirs_buffered.geojson
+├── Output/
+├── R/
+│   └── IndexRasterThresholding.R
+├── Sen2rAPI/
+│   ├── sen2r_API_Berambadi.R
+│   └── sen2r_API_Lebna.R
+├── sen2r_temp/
+├── Venus_API/
+│   ├── venus_zip/
+│   ├── 2-extract_area.py
+│   ├── 3-index_stats.py
+│   ├── config_theia.cfg
+│   └── Venus_Bandipur.py
+├── .gitignore
+├── Analysis.R
+├── License.md
+├── README.md
+├── S2Water.Rproj
+├── S2Water_ASCII.txt
+├── Stracture
+└── test.R
+```
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -67,8 +95,7 @@ This is an example of how to list things you need to use the software and how to
    ```js
    const API_KEY = 'ENTER YOUR API';
    ```
-
-
+   
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -81,8 +108,8 @@ Distributed under the CC BY-NC-SA 4.0 License. See `License.md` for more informa
 
 <!-- CONTACT -->
 ## Contact
-Sotirios Kechagias -  sot.kechagias@gmail.com
-Project Link: [https://github.com/SotKech/S2Water/](https://github.com/SotKech/S2Water/)
+- Sotirios Kechagias: sot.kechagias@gmail.com
+- Project Link: [https://github.com/SotKech/S2Water/](https://github.com/SotKech/S2Water/)
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
