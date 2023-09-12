@@ -7,7 +7,6 @@
   <a href="https://github.com/SotKech/S2Water/">
   <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngplay.com%2Fwp-content%2Fuploads%2F1%2FLetter-S-PNG-Photo.png&f=1&nofb=1&ipt=676c17b6eed1fbff95ce152952826d3574d8909f253b9424883625d7b3bff3c3&ipo=images" width="80" height="80">
   </a>
-<h3 align="center">S2Water</h3>
 </div>
 
 
