@@ -15,12 +15,12 @@
 pkgTest <- function(x){
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}
-  library(x, character.only = TRUE)}
-neededPackages <- c("raster", "sen2r")
+  library(x, character.only = TRUE)
+} ; neededPackages <- c("raster", "sen2r")
 for (package in neededPackages){pkgTest(package)}
 
 #### Data Preparation ####
-# Create directories
+# Create directories.
 getwd() ; setwd("C:/Projects/S2Water")
 Data_path   <- "./Data"
 # Output_path <- "./Output"
@@ -28,9 +28,11 @@ Temp_path   <- "./sen2r_temp" # folder to store downloaded SAFE
 if (!dir.exists(Data_path))   {dir.create(Data_path)}
 # if (!dir.exists(Output_path)) {dir.create(Output_path)}
 if (!dir.exists(Temp_path))    {dir.create(Temp_path)} 
-
+# Load Area Of Interest.
 AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 
+#### Search for available S2 products####
+# Create a CSV with the available images according to the parameters.
 list <- sen2r::s2_list(
   tile =          "32SPF",
   orbit =         122,
@@ -38,18 +40,21 @@ list <- sen2r::s2_list(
                     as.Date("2017-08-5")),
   level =         "auto",
   server =        "scihub",
+  # apihub = NA,                 # (Optional)   !! I can define apihub.txt 
   service =       "apihub",
   max_cloud =     10,
   availability =  "check",
   output_type =   "deprecated"
 ) ; my_df <- as.data.frame(list) ; write.csv(my_df, "./Lebna.csv")
-
+# Order images (Optional)
 sen2r::s2_order(list)
 
+#### Start sen2r Download ####
 start_time <- Sys.time() ; expo <- sen2r(
   gui =               FALSE,
   sel_sensor =        c("s2a", "s2b"),
   server =            "scihub",
+  order_lta =         TRUE,
   step_atmcorr =      "auto",
   max_cloud_safe =    10,
   timewindow =        c(as.Date("2017-01-30"),
