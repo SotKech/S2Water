@@ -32,7 +32,7 @@ tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
-#### Indices functions ####
+                           #### Indices functions ####
 calculate_NDVI <- function(B4, B8) {
   NDVI <- (B8 - B4) / (B8 + B4)
   return(NDVI)

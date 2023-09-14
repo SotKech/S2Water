@@ -55,10 +55,10 @@ start_time <- Sys.time() ; expo <- sen2r(
   sel_sensor =        c("s2a", "s2b"),
   server =            "scihub",
   order_lta =         TRUE,
-  step_atmcorr =      "auto",
+  step_atmcorr =      "l2a",    # "auto" !!!
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2017-01-30"),
-                        as.Date("2017-08-5")),
+  timewindow =        c(as.Date("2018-11-07"),
+                        as.Date("2019-03-12")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("32SPF"),

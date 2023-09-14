@@ -1,10 +1,6 @@
 #' This function automatically defines a threshold value in order to create a
 #' binary raster. Needs an index GeoTIFF raster and produce a GeoTIFF binary
 #' output. This function requires the "raster" package.
-#' Example usage:
-#' input_file <- "./Output/S2A2A_20210619_122_AOI_BOA_10_MNDWI.tif"
-#' output_file <- "Binary.tif"
-#' IndexRasterThresholding(input_file, output_file)
 
 IndexRasterThresholding <- function(input_file, output_file) {
   # Load the index GeoTIFF.
@@ -26,4 +22,15 @@ IndexRasterThresholding <- function(input_file, output_file) {
   # Save the binary image.
   writeRaster(Binary, filename = output_file,
               format = "GTiff", overwrite = TRUE)
+  return(Threshold)
 }
+
+#' Example usage:
+#' input_file <- "./Output/S2A2A_20210619_122_AOI_BOA_10_MNDWI.tif"
+#' output_file <- "Binary.tif"
+#' IndexRasterThresholding(input_file, output_file)
+#' plot(raster(output_file))
+
+
+
+
