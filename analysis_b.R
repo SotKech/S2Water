@@ -18,7 +18,7 @@ pkgTest <- function(x){
     install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)
 }
-neededPackages <- c("raster", "sf", "doParallel", "foreach")
+neededPackages <- c("raster", "sf", "doParallel", "foreach", "parallel", "iterators")
 for (package in neededPackages){pkgTest(package)}
 
 
@@ -65,7 +65,7 @@ result_df <- data.frame(Date = character(0), ImageName = character(0))
 
 k = 0
 # Iterate through each image file.
-for (img in NDWI_images) {
+for (img in MNDWI_images) {
   date_str <- substr(basename(img), 7, 14)
   formatted_date <- paste(substr(date_str, 1, 4), substr(date_str, 5, 6),
                           substr(date_str, 7, 8), sep = "-")
@@ -83,52 +83,14 @@ for (img in NDWI_images) {
   # Add the row to the result dataframe.
   result_df <- rbind(result_df, row)
   # Create progression bar.
-  k = k + 1 ; j = round((k/as.double(length(NDWI_images))*100), 2)
+  k = k + 1 ; j = round((k/as.double(length(MNDWI_images))*100), 2)
   cat(paste0("\r", j, "%"))
 }
-################################################################################
-
-# Initialize an empty data frame to store the results.
-result_df <- data.frame(Date = character(0), ImageName = character(0))
-
-registerDoParallel(cores = 8)
-k = 0
-rresult_df <- foreach(img = NDWI_images, .combine = rbind) %dopar% {
-  date_str <- substr(basename(img), 7, 14)
-  formatted_date <- paste(substr(date_str, 1, 4), substr(date_str, 5, 6),
-                          substr(date_str, 7, 8), sep = "-")
-  row <- data.frame(Date = formatted_date, ImageName = basename(img))
-  for (i in 1:nrow(AOI_b)) {
-    reservoir <- AOI_b[AOI_b$id == i, ]
-    pixels <- CountPixels(img, reservoir)
-    col_px <- paste("Reservoir", i, "px", sep = "_")
-    col_area <- paste("Reservoir", i, "area(Km2)", sep = "_")
-    row[[col_px]] <- pixels
-    row[[col_area]] <- pixels * 1e-6
-  }
-  k = k + 1 ; j = round((k/as.double(length(NDWI_images))*100), 2)
-  cat(paste0("\r", j, "%"))
-  return(row)
-}
-
-# Stop parallel processing
-stopImplicitCluster()
 
 # Print the result dataframe and write it to a CSV file.
 result_df$Date <- as.Date(result_df$Date)
-cat("Result Dataframe:\n")
-print(result_df)
+# cat("Result Dataframe:\n") ; print(result_df)
 write.csv(result_df, file = "./result_df.csv")
-
-
-
-################################################################################
-
-# Print the result dataframe and write it to a CSV file.
-result_df$Date <- as.Date(result_df$Date)
-cat("Result Dataframe:\n") ; print(result_df)
-write.csv(result_df, file = "./result_df.csv")
-
 
                       #### Plotting Pixel Count Graphs ####
 # Define a function to generate and display plots

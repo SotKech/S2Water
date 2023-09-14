@@ -40,8 +40,8 @@ AOI <- sf::st_read("./Data/Berambadi_AOI.geojson")
 list <- sen2r::s2_list(
   tile =          "43PFP",
   orbit =         062,
-  time_interval = c(as.Date("2019-01-01"),
-                    as.Date("2020-01-01")),
+  time_interval = c(as.Date("2018-01-01"),
+                    as.Date("2019-01-01")),
   level =         "auto",
   server =        "scihub",
   # service =       "apihub",
@@ -60,11 +60,11 @@ expo <- sen2r(
   step_atmcorr =      "auto", # means that L2A is first searched on SciHub: if 
                               # found, it is downloaded, if not, the L1C is
                               # downloaded and sen2cor applied
-  # sen2cor_use_dem = F       # This produce Level 2AP
+  # sen2cor_use_dem = F       # This produce Level 2AP 
   # sen2cor_gipp =    NA,        
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2019-01-01"),
-                        as.Date("2020-01-01")),
+  timewindow =        c(as.Date("2022-02-10"),
+                        as.Date("2022-02-10")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("43PFP"),
@@ -86,4 +86,3 @@ expo <- sen2r(
 ) ; end_time <-       Sys.time()
 cat("Runtime: ", round(as.numeric(difftime(end_time,start_time, units = "min")),
                                   digits = 3),"m", sep = "")
-
