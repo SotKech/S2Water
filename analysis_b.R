@@ -41,56 +41,6 @@ get_tif_files <- function(suffix) {              # Function to get a list of TIF
              full.names = TRUE)
 }
 
-# Get lists of TIF files with different suffixes
-NDVI_images  <- get_tif_files("NDVI")   ; NDWI_images <- get_tif_files("NDWI")
-MNDWI_images <- get_tif_files("MNDWI")  ; SWI_images  <- get_tif_files("SWI")
-AWEI_images  <- get_tif_files("AWEI")
-
-
-################################################################################
-              #### Pixel/Area Count Per Reservoir Dataframe ####
-# Function to count pixels within a reservoir.
-CountPixels <- function(img, resrv) {
-  img <- raster(img)
-  mask <- rasterize(resrv,raster(extent(img),
-                                 ncols = ncol(img),
-                                 nrows = nrow(img)))
-  img_masked <- img * mask
-  px <- sum(values(img_masked) > 0, na.rm = TRUE) # > 0 for AWEI
-  return(px)
-} # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-# Initialize an empty data frame to store the results.
-result_df <- data.frame(Date = character(0), ImageName = character(0))
-
-k = 0
-# Iterate through each image file.
-for (img in MNDWI_images) {
-  date_str <- substr(basename(img), 7, 14)
-  formatted_date <- paste(substr(date_str, 1, 4), substr(date_str, 5, 6),
-                          substr(date_str, 7, 8), sep = "-")
-  # Create a row for the result dataframe.
-  row <- data.frame(Date = formatted_date, ImageName = basename(img))
-  # Iterate through each reservoir in AOI_b and count negative pixels.
-  for (i in 1:nrow(AOI_b)) {
-    reservoir <- AOI_b[AOI_b$id == i, ]
-    pixels <- CountPixels(img, reservoir)
-    col_px <- paste("Reservoir", i, "px", sep = "_")
-    col_area <- paste("Reservoir", i, "area(Km2)", sep = "_")
-    row[[col_px]] <- pixels
-    row[[col_area]] <- pixels * 1e-6 # Convert to square kilometers.
-  }
-  # Add the row to the result dataframe.
-  result_df <- rbind(result_df, row)
-  # Create progression bar.
-  k = k + 1 ; j = round((k/as.double(length(MNDWI_images))*100), 2)
-  cat(paste0("\r", j, "%"))
-}
-
-# Print the result dataframe and write it to a CSV file.
-result_df$Date <- as.Date(result_df$Date)
-# cat("Result Dataframe:\n") ; print(result_df)
-write.csv(result_df, file = "./result_df.csv")
 
                       #### Plotting Pixel Count Graphs ####
 # Define a function to generate and display plots
