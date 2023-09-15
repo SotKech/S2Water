@@ -2,6 +2,7 @@
 .Rproj.user/
 Data/.ignorelist.txt
 Output
+sen2r_temp
 *.csv
 *.tif
 *.zip
