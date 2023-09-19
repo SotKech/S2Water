@@ -45,10 +45,12 @@ list <- sen2r::s2_list(
   max_cloud =     10,
   availability =  "check",
   output_type =   "deprecated"
-) ; my_df <- as.data.frame(list) # ; write.csv(my_df, "./Lebna.csv")
-print(my_df)
+) ; my_df <- as.data.frame(list) #
+# write.csv(my_df, "./Lebna.csv")
+# print(my_df)
+
 # Order images (Optional)
-sen2r::s2_order(list)
+# sen2r::s2_order(list)
 
 #### Start sen2r Download ####
 start_time <- Sys.time() ; expo <- sen2r(

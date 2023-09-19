@@ -36,10 +36,9 @@ get_tif_files <- function(suffix) {
              full.names = TRUE)
 }
 # Get lists of TIF files with different suffixes
-NDVI_images  <- get_tif_files("NDVI")   ; NDWI_images <- get_tif_files("NDWI")
-MNDWI_images <- get_tif_files("MNDWI")  ; SWI_images  <- get_tif_files("SWI")
-AWEI_images  <- get_tif_files("AWEI")
-
+NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
+MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
+SWI_images   <- get_tif_files("SWI") ; B1_1500_images<- get_tif_files("B1_1500")
 
                    #### Count Pixels And Create Dataframe ####
 CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
@@ -70,8 +69,9 @@ CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
   write.csv(result_df, file = output_file)
 }
 
-CountPixelsAndCreateDataframe(NDVI_images,  AOI_b, paste0("NDVI",  ".csv"))
-CountPixelsAndCreateDataframe(NDWI_images,  AOI_b, paste0("NDWI",  ".csv"))
-CountPixelsAndCreateDataframe(MNDWI_images, AOI_b, paste0("MNDWI", ".csv"))
-CountPixelsAndCreateDataframe(SWI_images,   AOI_b, paste0("SWI",   ".csv"))
-CountPixelsAndCreateDataframe(AWEI_images,  AOI_b, paste0("AWEI",  ".csv"))
+CountPixelsAndCreateDataframe(B1_1500_images,  AOI_b, paste0("B1_1500",  ".csv"))
+CountPixelsAndCreateDataframe(NDVI_images,  AOI_b, paste0("NDVI",     ".csv"))
+CountPixelsAndCreateDataframe(NDWI_images,  AOI_b, paste0("NDWI",     ".csv"))
+CountPixelsAndCreateDataframe(MNDWI_images, AOI_b, paste0("MNDWI",    ".csv"))
+CountPixelsAndCreateDataframe(SWI_images,   AOI_b, paste0("SWI",      ".csv"))
+CountPixelsAndCreateDataframe(AWEI_images,  AOI_b, paste0("AWEI",     ".csv"))

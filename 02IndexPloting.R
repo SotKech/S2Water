@@ -41,9 +41,9 @@ get_tif_files <- function(suffix) {              # Function to get a list of TIF
 }
 
 # Get lists of TIF files with different suffixes
-NDVI_images  <- get_tif_files("NDVI")   ; NDWI_images <- get_tif_files("NDWI")
-MNDWI_images <- get_tif_files("MNDWI")  ; SWI_images  <- get_tif_files("SWI")
-AWEI_images  <- get_tif_files("AWEI")
+NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
+MNDWI_images <- get_tif_files("MNDWI") ; SWI_images  <- get_tif_files("SWI")
+AWEI_images  <- get_tif_files("AWEI")  ; B1_1500     <- get_tif_files("B1_1500")
 
 
                           #### Plotting Index Images####

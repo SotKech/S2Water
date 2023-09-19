@@ -9,7 +9,6 @@
 #'
 
 
-
                            #### Package Import ####
 # pkgTest is a helper function to load packages and  
 # install packages only when are not installed yet.
@@ -40,12 +39,10 @@ get_tif_files <- function(suffix) {              # Function to get a list of TIF
              pattern = paste0("\\_",suffix, "\\.tif$"),
              full.names = TRUE)
 }
-
 # Get lists of TIF files with different suffixes
-NDVI_images  <- get_tif_files("NDVI")   ; NDWI_images <- get_tif_files("NDWI")
-MNDWI_images <- get_tif_files("MNDWI")  ; SWI_images  <- get_tif_files("SWI")
-AWEI_images  <- get_tif_files("AWEI")
-
+NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
+MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
+SWI_images   <- get_tif_files("SWI") ; B1_1500_images<- get_tif_files("B1_1500")
 
 ################################################################################
               #### Pixel/Area Count Per Reservoir Dataframe ####
@@ -58,7 +55,7 @@ CountPixels <- function(img, resrv) {
   img_masked <- img * mask
   px <- sum(values(img_masked) > 0, na.rm = TRUE) # > 0 for AWEI
   return(px)
-} # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+}
 
 # Initialize an empty data frame to store the results.
 result_df <- data.frame(Date = character(0), ImageName = character(0))
@@ -91,6 +88,11 @@ for (img in MNDWI_images) {
 result_df$Date <- as.Date(result_df$Date)
 # cat("Result Dataframe:\n") ; print(result_df)
 write.csv(result_df, file = "./result_df.csv")
+
+################################################################################
+
+
+
 
                       #### Plotting Pixel Count Graphs ####
 # Define a function to generate and display plots
