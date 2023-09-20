@@ -16,12 +16,13 @@ pkgTest <- function(x){
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)
-} for (package in neededPackages){pkgTest(package)}
+}
+for (package in neededPackages){pkgTest(package)}
 
 
                           #### Set up directories ####
-getwd()
 # Get a list of all TIF files in the ./Data/BOA/ directory.
+getwd()
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 # Load boundaries of reservoirs
@@ -40,7 +41,20 @@ NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
 MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
 SWI_images   <- get_tif_files("SWI") ; B1_1500_images<- get_tif_files("B1_1500")
 
+
                    #### Count Pixels And Create Dataframe ####
+# Function to count pixels within a reservoir.
+CountPixels <- function(img, resrv) {
+  img <- raster(img)
+  mask <- rasterize(resrv,raster(extent(img),
+                                 ncols = ncol(img),
+                                 nrows = nrow(img)))
+  img_masked <- img * mask
+  px <- sum(values(img_masked) < 0, na.rm = TRUE)
+  return(px)
+}
+
+# Count pixels and create dataframe.
 CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
   # Initialize an empty data frame to store the results.
   result_df <- data.frame(Date = character(0), ImageName = character(0))
@@ -69,9 +83,13 @@ CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
   write.csv(result_df, file = output_file)
 }
 
-CountPixelsAndCreateDataframe(B1_1500_images,  AOI_b, paste0("B1_1500",  ".csv"))
-CountPixelsAndCreateDataframe(NDVI_images,  AOI_b, paste0("NDVI",     ".csv"))
-CountPixelsAndCreateDataframe(NDWI_images,  AOI_b, paste0("NDWI",     ".csv"))
-CountPixelsAndCreateDataframe(MNDWI_images, AOI_b, paste0("MNDWI",    ".csv"))
-CountPixelsAndCreateDataframe(SWI_images,   AOI_b, paste0("SWI",      ".csv"))
-CountPixelsAndCreateDataframe(AWEI_images,  AOI_b, paste0("AWEI",     ".csv"))
+# Create and export Dataframs
+CountPixelsAndCreateDataframe(SWI_images,     AOI_b, paste0("SWI",     ".csv"))
+CountPixelsAndCreateDataframe(AWEI_images,    AOI_b, paste0("AWEI",    ".csv"))
+CountPixelsAndCreateDataframe(MNDWI_images,   AOI_b, paste0("MNDWI",   ".csv"))
+CountPixelsAndCreateDataframe(NDWI_images,    AOI_b, paste0("NDWI",    ".csv"))
+CountPixelsAndCreateDataframe(SWI_images,     AOI_b, paste0("SWI",     ".csv"))
+# For NDVI change to: px <- sum(values(img_masked) < 0, na.rm = TRUE)
+CountPixelsAndCreateDataframe(NDVI_images,    AOI_b, paste0("NDVI",    ".csv"))
+# B1>1500 cloud cover
+CountPixelsAndCreateDataframe(B1_1500_images, AOI_b, paste0("B1_1500", ".csv"))

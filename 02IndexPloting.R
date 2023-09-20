@@ -12,19 +12,19 @@
                             #### Package Import ####
 # pkgTest is a helper function to load packages and  
 # install packages only when are not installed yet.
+neededPackages <- c("raster", "sf", "dplyr", "ggplot2")
 pkgTest <- function(x){
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)
 }
-neededPackages <- c("raster", "sf")
 for (package in neededPackages){pkgTest(package)}
 
 
                           #### Set up directories ####
 getwd()
 # folder to store Plots
-Plots_path   <- "./Output/Plot/"                         
+Plots_path   <- "./Output/Plots/"                         
 if (!dir.exists(Plots_path)){dir.create(Plots_path)}
 # Get a list of all TIF files in the working directory.
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
@@ -42,8 +42,8 @@ get_tif_files <- function(suffix) {              # Function to get a list of TIF
 
 # Get lists of TIF files with different suffixes
 NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
-MNDWI_images <- get_tif_files("MNDWI") ; SWI_images  <- get_tif_files("SWI")
-AWEI_images  <- get_tif_files("AWEI")  ; B1_1500     <- get_tif_files("B1_1500")
+MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
+SWI_images   <- get_tif_files("SWI") ; B1_1500_images<- get_tif_files("B1_1500")
 
 
                           #### Plotting Index Images####
@@ -70,11 +70,11 @@ create_raster_plot <- function(image, fill_colors, index, lim, brk) {
     xlab("") +
     ylab("")
   
+  plot(p)
   ggsave(                                        # Export the plot as a PNG file
     filename = paste0("./Output/Plots/plot_", basename(image), ".png"),
     plot = p, width = 10,  height = 10, dpi = 300, bg = "white"
   )
-  return(p)
 }
 
 # Function to create plots for raster images
@@ -84,12 +84,14 @@ create_plots <- function(img_list, plot_function, fill_colors, index, lim, brk){
 }
 
 # Define the fill colors and fill names for NDVI and NDWI
-ndvi_col <- c("red", "red", "orange", "green", "darkgreen")
+ndvi_col   <- c("red", "red", "orange", "green", "darkgreen")
 other_cols <- c("darkgreen" ,"green", "white", "blue", "blue")
 lims <- c(-1, 1)        ; brks <- c(-1, -0.5, 0, 0.5, 1)
 AWEI_lims <- c(-20, 20) ; AWEI_brks <- c(-20, -10, 0, 10, 20)
 
 # Call the create_plots function with the appropriate arguments
+create_plots(B1_1500_images, create_raster_plot, c("green", "white"),
+            "B1_1500", c(0, 1), c(0, 1))
 create_plots(NDVI_images,  create_raster_plot, ndvi_col,   "NDVI",  lims, brks)
 create_plots(NDWI_images,  create_raster_plot, other_cols, "NDWI",  lims, brks)
 create_plots(MNDWI_images, create_raster_plot, other_cols, "MNDWI", lims, brks)

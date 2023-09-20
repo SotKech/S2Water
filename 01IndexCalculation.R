@@ -78,8 +78,9 @@ for (tif_file in tif_files) {
   # Calculate indices.
   NDVI    <- calculate_NDVI(B4, B8) ;  SWI   <- calculate_SWI(B5, B11)
   NDWI    <- calculate_NDWI(B3, B8) ;  MNDWI <- calculate_MNDWI(B3, B11)
-  AWEI    <- calculate_AWEI(B3, B8, B11, B12)
-  B1_1500 <- calculate_cloud(B1)
+  AWEI    <- calculate_AWEI(B3, B8, B11, B12) ; B1_1500 <- calculate_cloud(B1)
+  
+  
   # List of raster objects and corresponding file names.
   raster_list <- list(
     list(raster_obj = B1_1500,  filename_suffix = "_B1_1500"),
