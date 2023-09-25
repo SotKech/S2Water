@@ -40,10 +40,11 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
   }
   # Create the merged plot
   p <- ggplot() +
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_line(data = data1,
               aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
-    geom_bar(data = data2, alpha = 0.5, stat = "identity",
-             aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
+    geom_bar( data = data2, alpha = 0.5, stat = "identity",
+              aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
     geom_line(data = data3,
               aes(x = Date, y = .data[[reservoir]], color = "MNDWI")) +
     geom_line(data = data4,
@@ -52,7 +53,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
               aes(x = Date, y = .data[[reservoir]], color = "NDWI")) +
     geom_line(data = data6,
               aes(x = Date, y = .data[[reservoir]], color = "SWI")) +
-    #~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_point(data = data1,
                aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
     geom_point(data = data3,
@@ -63,36 +64,28 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
                aes(x = Date, y = .data[[reservoir]], color = "NDWI")) +
     geom_point(data = data6,
                aes(x = Date, y = .data[[reservoir]], color = "SWI")) +
-    #~~~~~~~~~~~~~~~~~~~~
-    # ylim(0, ylm) +
-    scale_x_date(date_breaks = "1 month", date_labels = "%y-%m-%d") +
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     xlim(as.Date("2020-01-01"), as.Date("2023-01-01")) +
+    scale_x_date(date_breaks = "1 month", date_labels = "%y-%m-%d") +
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
-          plot.title = element_text(hjust = 0.5)) +
-    labs(title = paste(reservoir),
-         color = "Indices") +
-    scale_fill_manual(name = " ",
-                      values = c("B1_1500" = "orange")) +
+           plot.title = element_text(hjust = 0.5)) +
+    labs(title = paste(reservoir), color = "Indices") +
+    scale_fill_manual(name = " ", values = c("B1_1500" = "orange")) +
     xlab("Date") +
     ylab("Water Pixel Count") +
-    theme(legend.position = "top")
-  
-  # Display the merged plot
+    theme(legend.position = "top") ###### is this nessesary
+
   # plot(p)
   ggsave(paste0("./Outpot/Graphs/Lebna_",reservoir,".png", sep = ''),
          plot = p, width = 12, height = 6.5, dpi = 300,)
 }
-
 
 # Read and assign CSV files to individual variables
 for (i in 1:6) {
   file_path <- paste('./', c('AWEI', 'B1_1500', 'MNDWI', 'NDVI', 'NDWI', 'SWI')[i], '_images_df.csv', sep = '')
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
-
-# Now you have result_df1 to result_df6 as separate variables
-
-
 
 # Use a loop to generate the reservoir names and add them to the vector
 for (i in 1:12) {
@@ -101,6 +94,8 @@ for (i in 1:12) {
   generate_and_display_merged_plots(result_df1, result_df2, result_df3,
                                     result_df4, result_df5, result_df6,
                                     reservoirs)
+  progress <- round((i / 12) * 100, 2)
+  cat(paste0("\r", progress, "%"))
 }
 
 

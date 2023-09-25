@@ -55,7 +55,7 @@ calculate_AWEI <- function(B3, B8, B11, B12) {
 }
 
 calculate_cloud  <- function(B1) {                                   
-  B1_1500 <- B1[[1]] > 1500
+  B1_1500 <- B1[[1]] >= 1500
   return(B1_1500)
 }
 

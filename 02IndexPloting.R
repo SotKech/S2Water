@@ -53,33 +53,28 @@ create_raster_plot <- function(image, fill_colors, index, lim, brk) {
   raster_df <- as.data.frame(x, xy = TRUE)
   p <- ggplot() +
     geom_raster(data = raster_df, aes(x = x, y = y, fill = raster_df[, 3])) +
-    scale_fill_gradientn(
-      colors = fill_colors,
-      limits = lim,
-      na.value = "transparent",
-      breaks = brk,
-    ) +
+    scale_fill_gradientn(colors = fill_colors, limits = lim,
+                         na.value = "transparent", breaks = brk) +
     geom_sf(data = AOI_b, fill = "transparent", color = "red", size = 1) +
+    geom_sf_text(data = AOI_b, aes(label = id), nudge_y = 500,
+                 color = "red", alpha = 0.75) +
     coord_sf() +
-    theme_minimal() +
     labs(
       title = as.Date(substr(basename(image), 7, 14), format = "%Y%m%d"),
       fill = index
     ) +
-    theme(plot.title = element_text(hjust = 0.5)) +
-    xlab("") +
-    ylab("")
+    theme_minimal() +
+    theme(plot.title = element_text(hjust = 0.5)) + 
+    xlab("Longitude") + ylab("Latitude")
   
-  plot(p)
-  ggsave(                                        # Export the plot as a PNG file
-    filename = paste0("./Output/Plots/plot_", basename(image), ".png"),
-    plot = p, width = 10,  height = 10, dpi = 300, bg = "white"
-  )
+  # plot(p)
+  ggsave(filename = paste0("./Output/Plots/plot_", basename(image), ".png"),
+         plot = p, width = 10,  height = 10, dpi = 300, bg = "white")
 }
-
+i=0
 # Function to create plots for raster images
 create_plots <- function(img_list, plot_function, fill_colors, index, lim, brk){
-  lapply(img_list[1:41], ##### you need to adjust for the images
+  lapply(img_list[1:5],                                                        ##### you need to adjust for the images
          function(image) {plot_function(image, fill_colors, index, lim, brk)})
 }
 

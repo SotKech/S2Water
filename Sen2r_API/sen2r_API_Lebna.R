@@ -36,8 +36,8 @@ AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 list <- sen2r::s2_list(
   tile =          "32SPF",
   orbit =         122,
-  time_interval = c(as.Date("2018-04-06"),
-                    as.Date("2018-08-24")),
+  time_interval = c(as.Date("2017-01-01"),
+                    as.Date("2023-09-25")),
   level =         "auto",
   server =        "scihub",
   # apihub = NA,                 # (Optional)   !! I can define apihub.txt 
@@ -46,7 +46,7 @@ list <- sen2r::s2_list(
   availability =  "check",
   output_type =   "deprecated"
 ) ; my_df <- as.data.frame(list) #
-# write.csv(my_df, "./Lebna.csv")
+write.csv(my_df, "./Lebna.csv")
 # print(my_df)
 
 # Order images (Optional)
@@ -60,8 +60,8 @@ start_time <- Sys.time() ; expo <- sen2r(
   order_lta =         TRUE,
   step_atmcorr =      "l2a",    # "auto" !!!
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2018-04-06"),
-                        as.Date("2018-08-24")),
+  timewindow =        c(as.Date("2023-01-01"),
+                        as.Date("2023-09-22")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("32SPF"),
