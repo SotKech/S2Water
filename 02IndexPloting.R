@@ -43,7 +43,9 @@ get_tif_files <- function(suffix) {              # Function to get a list of TIF
 # Get lists of TIF files with different suffixes
 NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
 MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
-SWI_images   <- get_tif_files("SWI") ; B1_1500_images<- get_tif_files("B1_1500")
+SWI_images   <- get_tif_files("SWI")   ; B1_1500_images<- get_tif_files("B1_1500")
+MBWI_images  <- get_tif_files("MBWI")  ; LSWI_images <- get_tif_files("LSWI")
+
 
 
                           #### Plotting Index Images####
@@ -71,10 +73,9 @@ create_raster_plot <- function(image, fill_colors, index, lim, brk) {
   ggsave(filename = paste0("./Output/Plots/plot_", basename(image), ".png"),
          plot = p, width = 10,  height = 10, dpi = 300, bg = "white")
 }
-i=0
 # Function to create plots for raster images
 create_plots <- function(img_list, plot_function, fill_colors, index, lim, brk){
-  lapply(img_list[1:5],                                                        ##### you need to adjust for the images
+  lapply(img_list[1:length(img_list)],                                                        ##### you need to adjust for the images
          function(image) {plot_function(image, fill_colors, index, lim, brk)})
 }
 
@@ -85,11 +86,12 @@ lims <- c(-1, 1)        ; brks <- c(-1, -0.5, 0, 0.5, 1)
 AWEI_lims <- c(-20, 20) ; AWEI_brks <- c(-20, -10, 0, 10, 20)
 
 # Call the create_plots function with the appropriate arguments
-create_plots(B1_1500_images, create_raster_plot, c("green", "white"),
-            "B1_1500", c(0, 1), c(0, 1))
+create_plots(B1_1500_images, create_raster_plot, c("green", "white"), "B1_1500", c(0, 1), c(0, 1))
 create_plots(NDVI_images,  create_raster_plot, ndvi_col,   "NDVI",  lims, brks)
 create_plots(NDWI_images,  create_raster_plot, other_cols, "NDWI",  lims, brks)
 create_plots(MNDWI_images, create_raster_plot, other_cols, "MNDWI", lims, brks)
 create_plots(SWI_images,   create_raster_plot, other_cols, "SWI",   lims, brks)
+create_plots(LSWI_images,  create_raster_plot, other_cols, "LSWI",  lims, brks)
+create_plots(MBWI_images,  create_raster_plot, c("darkgreen" ,"green", "lightgreen", "white", "blue"), "MBWI",  c(-20000, 5000), c(-20000, -15000, -10000, -5000, +0, 5000))
 create_plots(AWEI_images,  create_raster_plot, other_cols, "AWEI",  AWEI_lims,
              AWEI_brks)

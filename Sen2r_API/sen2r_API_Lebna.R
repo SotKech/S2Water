@@ -21,7 +21,7 @@ for (package in neededPackages){pkgTest(package)}
 
 #### Data Preparation ####
 # Create directories.
-getwd() ; setwd("C:/Projects/S2Water")
+getwd() ; # setwd("C:/Projects/S2Water")
 Data_path   <- "./Data"
 # Output_path <- "./Output"
 Temp_path   <- "./sen2r_temp" # folder to store downloaded SAFE
@@ -36,7 +36,7 @@ AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 list <- sen2r::s2_list(
   tile =          "32SPF",
   orbit =         122,
-  time_interval = c(as.Date("2017-01-01"),
+  time_interval = c(as.Date("2020-01-01"),
                     as.Date("2023-09-25")),
   level =         "auto",
   server =        "scihub",
@@ -55,13 +55,14 @@ write.csv(my_df, "./Lebna.csv")
 #### Start sen2r Download ####
 start_time <- Sys.time() ; expo <- sen2r(
   gui =               FALSE,
+  # s2_levels =         "l1c",
   sel_sensor =        c("s2a", "s2b"),
   server =            "scihub",
   order_lta =         TRUE,
-  step_atmcorr =      "l2a",    # "auto" !!!
+  step_atmcorr =      "auto",    # "auto" !!!
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2023-01-01"),
-                        as.Date("2023-09-22")),
+  timewindow =        c(as.Date("2022-10-17"),
+                        as.Date("2022-10-18")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("32SPF"),

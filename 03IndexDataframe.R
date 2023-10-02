@@ -36,10 +36,12 @@ get_tif_files <- function(suffix) {
              pattern = paste0("\\_",suffix, "\\.tif$"),
              full.names = TRUE)
 }
+
 # Get lists of TIF files with different suffixes
 NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
 MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
-SWI_images   <- get_tif_files("SWI") ; B1_1500_images<- get_tif_files("B1_1500")
+SWI_images   <- get_tif_files("SWI")   ; B1_1500_images<- get_tif_files("B1_1500")
+MBWI_images  <- get_tif_files("MBWI")  ; LSWI_images <- get_tif_files("LSWI")
 
 
                    #### Count Pixels And Create Dataframe ####
@@ -50,7 +52,7 @@ CountPixels <- function(img, resrv) {
                                  ncols = ncol(img),
                                  nrows = nrow(img)))
   img_masked <- img * mask
-  px <- sum(values(img_masked) < 0, na.rm = TRUE)
+  px <- sum(values(img_masked) > 0, na.rm = TRUE)
   return(px)
 }
 
@@ -89,6 +91,10 @@ CountPixelsAndCreateDataframe(AWEI_images,    AOI_b, paste0("AWEI",    ".csv"))
 CountPixelsAndCreateDataframe(MNDWI_images,   AOI_b, paste0("MNDWI",   ".csv"))
 CountPixelsAndCreateDataframe(NDWI_images,    AOI_b, paste0("NDWI",    ".csv"))
 CountPixelsAndCreateDataframe(SWI_images,     AOI_b, paste0("SWI",     ".csv"))
+#---
+CountPixelsAndCreateDataframe(LSWI_images,     AOI_b, paste0("LSWI",     ".csv"))
+CountPixelsAndCreateDataframe(MBWI_images,     AOI_b, paste0("MBWI",     ".csv"))
+#---
 # For NDVI change to: px <- sum(values(img_masked) < 0, na.rm = TRUE)
 CountPixelsAndCreateDataframe(NDVI_images,    AOI_b, paste0("NDVI",    ".csv"))
 # B1>1500 cloud cover
