@@ -1,5 +1,5 @@
 #'
-#'                      MGI Internship  :   S2Water - Analysis_C
+#'                      MGI Internship  :   S2Water - 04DataframePlotting.R
 #'                      Author          :   Sotirios Kechagias
 #'                      Created         :   2023-09-14
 #'                      Last update     :   2023-09-15
@@ -77,13 +77,13 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     theme(legend.position = "top") ###### is this nessesary
 
   # plot(p)
-  ggsave(paste0("./Outpot/Graphs/Lebna_",reservoir,".png", sep = ''),
+  ggsave(paste0("./Outpot/Graphs/Lebna_",reservoir,".png", sep = ""),
          plot = p, width = 12, height = 6.5, dpi = 300,)
 }
 
 # Read and assign CSV files to individual variables
-for (i in 1:6) {
-  file_path <- paste('./', c('AWEI', 'B1_1500', 'MNDWI', 'NDVI', 'NDWI', 'SWI')[i], '_images_df.csv', sep = '')
+for (i in 1:7) {
+  file_path <- paste("./", c("AWEI", "B1_1500", "MNDWI", "MBWI", "NDVI", "NDWI", "SWI")[i], ".csv", sep = "")
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
 
@@ -97,12 +97,4 @@ for (i in 1:12) {
   progress <- round((i / 12) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }
-
-
-
-
-
-
-
-
 

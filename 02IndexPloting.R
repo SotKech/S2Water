@@ -1,5 +1,5 @@
 #'
-#'                      MGI Internship  :   S2Water - Analysis_a
+#'                      MGI Internship  :   S2Water - 02IndexPlotting
 #'                      Author          :   Sotirios Kechagias
 #'                      Created         :   2023-09-13
 #'                      Last update     :   2023-09-13

@@ -1,5 +1,5 @@
 #'
-#'                      MGI Internship  :   S2Water - Analysis
+#'                      MGI Internship  :   S2Water - 01IndexCalculation.R
 #'                      Author          :   Sotirios Kechagias
 #'                      Created         :   2023-06-21
 #'                      Last update     :   2023-08-30
@@ -242,7 +242,7 @@ for (tif_file in tif_files) {
 #                   se = TRUE,
 #                   fullrange = FALSE,
 #                   level = 0.95,
-#                   color = 'darkgrey', alpha = 0.5) +
+#                   color = "darkgrey", alpha = 0.5) +
 #       scale_x_date(date_breaks = "1 month", date_labels = "%d-%m-%y") +
 #       ylim(0, ylm) + 
 #       theme(axis.text.x = element_text(angle = 90, hjust = 1),

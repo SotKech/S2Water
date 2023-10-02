@@ -1,5 +1,5 @@
 #'
-#'                      MGI Internship  :   S2Water - Analysis_C
+#'                      MGI Internship  :   S2Water - 03IndexDataframe
 #'                      Author          :   Sotirios Kechagias
 #'                      Created         :   2023-09-14
 #'                      Last update     :   2023-09-15
