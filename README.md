@@ -86,14 +86,6 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/github_username/repo_name.git
    ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
    
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -112,9 +104,10 @@ Distributed under the CC BY-NC-SA 4.0 License. See `License.md` for more informa
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
-* []()
-* []()
-* []()
+<a href="https://en.ird.fr/">
+<img src= "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.afd.fr%2Fsites%2Fafd%2Ffiles%2F2017-08%2Flogo-ird_0.png&f=1&nofb=1&ipt=c58896d88b6913518b45959756999d505717ac064b754b2426b675df2b4de74b&ipo=images" width="340" height=100">
+<a href="https://www.umr-lisah.fr/?q=en">
+<img src= "https://pbs.twimg.com/profile_images/1180051796653416448/xYIKFZzt_400x400.png" width="100" height=100">
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
