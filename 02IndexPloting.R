@@ -30,7 +30,7 @@ if (!dir.exists(Plots_path)){dir.create(Plots_path)}
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 # Load boundaries of reservoirs
-AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+AOI_b <- sf::st_read("./Data/Berambadi_reservoirs.geojson")
 
 
                             #### Load Index Images ####

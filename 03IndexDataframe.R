@@ -26,7 +26,8 @@ getwd()
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 # Load boundaries of reservoirs
-AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+AOI_b <- sf::st_read("./Data/Berambadi_reservoirs.geojson")
+
 
 
                             #### Load Index Images ####
@@ -52,7 +53,7 @@ CountPixels <- function(img, resrv) {
                                  ncols = ncol(img),
                                  nrows = nrow(img)))
   img_masked <- img * mask
-  px <- sum(values(img_masked) > 0, na.rm = TRUE)
+  px <- sum(values(img_masked) < 0, na.rm = TRUE)
   return(px)
 }
 
@@ -68,11 +69,11 @@ CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
                             substr(date_str, 7, 8), sep = "-")
     row <- data.frame(Date = formatted_date, ImageName = basename(img))
     # Iterate the reservoirs.
-    for (j in 1:nrow(AOI_b)) {
+    for (j in 1:nrow(AOI_b)) {  #nrow(AOI_b) ?
       reservoir <- AOI_b[AOI_b$id == j, ]
       pixels <- CountPixels(img, reservoir)
       col_px <- paste("Reservoir", j, "px", sep = "_")
-      col_area <- paste("Reservoir", j, "area(ha)", sep = "_")
+      col_area <- paste("Reservoir", j, "area(m2)", sep = "_")
       row[[col_px]] <- pixels
       row[[col_area]] <- pixels * 1e-6
     }
@@ -86,16 +87,37 @@ CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
 }
 
 # Create and export Dataframs
-CountPixelsAndCreateDataframe(SWI_images,     AOI_b, paste0("SWI",     ".csv"))
-CountPixelsAndCreateDataframe(AWEI_images,    AOI_b, paste0("AWEI",    ".csv"))
-CountPixelsAndCreateDataframe(MNDWI_images,   AOI_b, paste0("MNDWI",   ".csv"))
-CountPixelsAndCreateDataframe(NDWI_images,    AOI_b, paste0("NDWI",    ".csv"))
-CountPixelsAndCreateDataframe(SWI_images,     AOI_b, paste0("SWI",     ".csv"))
+CountPixelsAndCreateDataframe(SWI_images,   AOI_b, paste0("SWI",   ".csv"))
+CountPixelsAndCreateDataframe(AWEI_images,  AOI_b, paste0("AWEI",  ".csv"))
+CountPixelsAndCreateDataframe(MNDWI_images, AOI_b, paste0("MNDWI", ".csv"))
+CountPixelsAndCreateDataframe(NDWI_images,  AOI_b, paste0("NDWI",  ".csv"))
+CountPixelsAndCreateDataframe(SWI_images,   AOI_b, paste0("SWI",   ".csv"))
 #---
-CountPixelsAndCreateDataframe(LSWI_images,     AOI_b, paste0("LSWI",     ".csv"))
-CountPixelsAndCreateDataframe(MBWI_images,     AOI_b, paste0("MBWI",     ".csv"))
-#---
+CountPixelsAndCreateDataframe(LSWI_images,  AOI_b, paste0("LSWI",  ".csv"))
+CountPixelsAndCreateDataframe(MBWI_images,  AOI_b, paste0("MBWI",  ".csv"))
 # For NDVI change to: px <- sum(values(img_masked) < 0, na.rm = TRUE)
-CountPixelsAndCreateDataframe(NDVI_images,    AOI_b, paste0("NDVI",    ".csv"))
-# B1>1500 cloud cover
+#### Count Pixels And Create Dataframe ####
+# Function to count pixels within a reservoir.
+CountPixels <- function(img, resrv) {
+  img <- raster(img)
+  mask <- rasterize(resrv,raster(extent(img),
+                                 ncols = ncol(img),
+                                 nrows = nrow(img)))
+  img_masked <- img * mask
+  px <- sum(values(img_masked) < 0, na.rm = TRUE)
+  return(px)
+}
+CountPixelsAndCreateDataframe(NDVI_images,  AOI_b, paste0("NDVI", ".csv"))
+# For B1_1500 change to: px <- sum(values(img_masked) == 0, na.rm = TRUE) ##############or 1500
+#### Count Pixels And Create Dataframe ####
+# Function to count pixels within a reservoir.
+CountPixels <- function(img, resrv) {
+  img <- raster(img)
+  mask <- rasterize(resrv,raster(extent(img),
+                                 ncols = ncol(img),
+                                 nrows = nrow(img)))
+  img_masked <- img * mask
+  px <- sum(values(img_masked) == 0, na.rm = TRUE)
+  return(px)
+}
 CountPixelsAndCreateDataframe(B1_1500_images, AOI_b, paste0("B1_1500", ".csv"))

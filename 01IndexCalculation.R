@@ -30,7 +30,7 @@ getwd()
 # Get a list of all TIF files in the working directory.
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
-AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+AOI_b <- sf::st_read("./Data/Berambadi_reservoirs.geojson")
 
                            #### Indices functions ####
 calculate_NDVI <- function(B4, B8) {
