@@ -73,7 +73,7 @@ CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
       reservoir <- AOI_b[AOI_b$id == j, ]
       pixels <- CountPixels(img, reservoir)
       col_px <- paste("Reservoir", j, "px", sep = "_")
-      col_area <- paste("Reservoir", j, "area(m2)", sep = "_")
+      col_area <- paste("Reservoir", j, "area(Km2)", sep = "_")
       row[[col_px]] <- pixels
       row[[col_area]] <- pixels * 1e-6
     }

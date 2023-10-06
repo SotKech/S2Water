@@ -70,7 +70,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_point(data = data7,
                aes(x = Date, y = .data[[reservoir]], color = "MBWI")) +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    scale_x_date(date_breaks = "1 month", date_labels = "%m-%Y") +
+    scale_x_date(date_breaks = "10 days", date_labels = "%d-%m-%Y") +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
            plot.title = element_text(hjust = 0.5)) +
@@ -81,13 +81,13 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     theme(legend.position = "top")
 
   # plot(p)
-  ggsave(paste0("./Output/Graphs",reservoir,".png", sep = ""),
+  ggsave(paste0("./Output/Graph_",reservoir,".png", sep = ""),
          plot = p, width = 12, height = 6.5, dpi = 300,)
 }
 
 # Read and assign CSV files to individual variables
 for (i in 1:7) {
-  file_path <- paste("./", c("AWEI", "B1_1500", "MNDWI", "MBWI", "NDVI", "NDWI", "SWI")[i], ".csv", sep = "")
+  file_path <- paste("./", c("AWEI", "B1_1500", "MNDWI", "NDVI", "NDWI", "SWI", "MBWI")[i], ".csv", sep = "")
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
 
@@ -97,7 +97,7 @@ for (i in 1:7) {
   
   # Filter the dataframe and assign it back to the same name
   assign(paste("result_df", i, sep = ""), df %>%
-           filter(Date >= as.Date("2021-01-01") & Date <= as.Date("2021-12-31")))
+           filter(Date >= as.Date("2022-01-01") & Date <= as.Date("2022-12-31")))
 }
 
 
