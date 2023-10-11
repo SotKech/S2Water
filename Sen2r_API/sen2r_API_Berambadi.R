@@ -35,7 +35,7 @@ AOI <- sf::st_read("./Data/Berambadi_AOI.geojson")
 # Create a CSV with the available images according to the parameters.
 list <- sen2r::s2_list(
   tile =          "43PFP",
-  orbit =         062,
+  # orbit =         062,                 <--------------------------
   time_interval = c(as.Date("2017-01-01"),
                     as.Date("2023-09-25")),
   level =         "auto",
@@ -46,7 +46,7 @@ list <- sen2r::s2_list(
   availability =  "check",
   output_type =   "deprecated"
 ) ; my_df <- as.data.frame(list) #
-write.csv(my_df, "./Lebna.csv")
+write.csv(my_df, "./Berambadi.csv")
 # print(my_df)
 
 # Order images (Optional)

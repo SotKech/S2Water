@@ -80,7 +80,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     ylab("Water Pixel Count") +
     theme(legend.position = "top")
 
-  # plot(p)
+  plot(p)
   ggsave(paste0("./Output/Graph_",reservoir,".png", sep = ""),
          plot = p, width = 12, height = 6.5, dpi = 300,)
 }
@@ -108,6 +108,33 @@ for (i in 1:12) {
   generate_and_display_merged_plots(result_df1, result_df2, result_df3,
                                     result_df4, result_df5, result_df6,
                                     result_df7, reservoirs)
+  progress <- round((i / 12) * 100, 2)
+  cat(paste0("\r", progress, "%"))
+}
+
+
+# Loop through Reservoir columns from 1 to 12
+for (i in 1:12) {
+  # Define the column name
+  reservoir_name <- paste0("Reservoir_", i, "_px")
+  reservoirs <- c(character(0), reservoir_name)
+  
+  # Find row indices in df1 where the column value is greater than 0
+  rows_to_remove <- which(result_df2[, reservoirs] > 100)
+  
+  # Remove corresponding rows from all data frames
+  f_df1 <- result_df1[-rows_to_remove, ]
+  f_df2 <- result_df2
+  f_df3 <- result_df3[-rows_to_remove, ]
+  f_df4 <- result_df4[-rows_to_remove, ]
+  f_df5 <- result_df5[-rows_to_remove, ]
+  f_df6 <- result_df6[-rows_to_remove, ]
+  f_df7 <- result_df7[-rows_to_remove, ]
+  
+  # Plot the current Reservoir column
+  generate_and_display_merged_plots(f_df1, f_df2, f_df3,
+                                    f_df4, f_df5, f_df6,
+                                    f_df7, reservoirs)
   progress <- round((i / 12) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }
