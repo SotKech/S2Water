@@ -58,29 +58,29 @@ start_time <- Sys.time() ; expo <- sen2r(
   sel_sensor =        c("s2a", "s2b"),
   server =            "scihub",
   order_lta =         TRUE,
-  step_atmcorr =      "l2a",    # "auto" !!!
+  step_atmcorr =      "auto",
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2023-01-01"),
-                        as.Date("2023-09-22")),
+  timewindow =        c(as.Date("2017-01-01"),
+                        as.Date("2020-01-01")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("43PFP"),
-  s2orbits_selected = c("062"),
+  s2orbits_selected = c("019", "062"),
   list_prods =        c("BOA"),
   list_rgb =          c("RGB432B"),
   # list_indices =      c("NDVI", "NDWI", "NDWI2"),
   # index_source =      "BOA",
-  mask_type =         NA,      # because of glint
+  mask_type =         NA,
   max_mask =          100, 
   clip_on_extent =    TRUE,
-  extent_as_mask =    TRUE,    # !Maybe I need this FALSE cause of NA of bbox!
+  extent_as_mask =    TRUE,
   overwrite =         FALSE,
   path_l1c =          Temp_path,
   path_l2a =          Temp_path,
   path_out =          Data_path,
   thumbnails =        FALSE,
-  parallel =          3,       # MAX speed / CPU load
-  processing_order =  "mixed"  # MAX speed / CPU load
+  parallel =          TRUE,       #
+  processing_order =  2           #
 ) ; end_time <- Sys.time()
 cat("Runtime: ", round(as.numeric(difftime(end_time,start_time, units = "min")),
                        digits = 3), "m", sep = "")
