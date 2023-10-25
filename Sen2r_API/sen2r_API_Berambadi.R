@@ -24,7 +24,7 @@ for (package in neededPackages){pkgTest(package)}
 getwd() # ; setwd("C:/Projects/S2Water")
 Data_path   <- "./Data"
 # Output_path <- "./Output"
-Temp_path   <- "./sen2r_temp" # folder to store downloaded SAFE
+Temp_path   <- "./sen2r_temp1" # folder to store downloaded SAFE
 if (!dir.exists(Data_path))   {dir.create(Data_path)}
 # if (!dir.exists(Output_path)) {dir.create(Output_path)}
 if (!dir.exists(Temp_path))    {dir.create(Temp_path)} 
@@ -35,9 +35,9 @@ AOI <- sf::st_read("./Data/Berambadi_AOI.geojson")
 # Create a CSV with the available images according to the parameters.
 list <- sen2r::s2_list(
   tile =          "43PFP",
-  # orbit =         062,                 <--------------------------
-  time_interval = c(as.Date("2017-01-01"),
-                    as.Date("2023-09-25")),
+  orbit =         c("019", "062"),
+  time_interval =  c(as.Date("2019-04-02"),
+                     as.Date("2019-04-04")),
   level =         "auto",
   server =        "scihub",
   # apihub = NA,                 # (Optional)   !! I can define apihub.txt 
@@ -57,11 +57,11 @@ start_time <- Sys.time() ; expo <- sen2r(
   gui =               FALSE,
   sel_sensor =        c("s2a", "s2b"),
   server =            "scihub",
-  order_lta =         TRUE,
-  step_atmcorr =      "auto",
+  order_lta =         T,              #############
+  step_atmcorr =      'auto', #   "auto",
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2017-01-01"),
-                        as.Date("2020-01-01")),
+  timewindow =        c(as.Date("2020-3-29"),
+                        as.Date("2021-12-29")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("43PFP"),
@@ -77,10 +77,10 @@ start_time <- Sys.time() ; expo <- sen2r(
   overwrite =         FALSE,
   path_l1c =          Temp_path,
   path_l2a =          Temp_path,
-  path_out =          Data_path,
+  path_out =          Data_path,   # "./",     
   thumbnails =        FALSE,
-  parallel =          TRUE,       #
-  processing_order =  2           #
+  parallel =          TRUE,
+  processing_order =  4           #
 ) ; end_time <- Sys.time()
 cat("Runtime: ", round(as.numeric(difftime(end_time,start_time, units = "min")),
                        digits = 3), "m", sep = "")

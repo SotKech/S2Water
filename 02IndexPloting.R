@@ -24,13 +24,13 @@ for (package in neededPackages){pkgTest(package)}
                           #### Set up directories ####
 getwd()
 # folder to store Plots
-Plots_path   <- "./Output/Plots/"                         
+Plots_path   <- "./Output/Plots/"                      
 if (!dir.exists(Plots_path)){dir.create(Plots_path)}
 # Get a list of all TIF files in the working directory.
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 # Load boundaries of reservoirs
-AOI_b <- sf::st_read("./Data/Berambadi_reservoirs.geojson")
+AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
 
                             #### Load Index Images ####

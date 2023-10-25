@@ -36,13 +36,13 @@ AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")
 list <- sen2r::s2_list(
   tile =          "32SPF",
   orbit =         122,
-  time_interval = c(as.Date("2020-01-01"),
-                    as.Date("2023-09-25")),
+  time_interval = c(as.Date("2017-12-07"),
+                    as.Date("2017-12-07")),
   level =         "auto",
   server =        "scihub",
   # apihub = NA,                 # (Optional)   !! I can define apihub.txt 
   service =       "apihub",
-  max_cloud =     10,
+  max_cloud =     100,
   availability =  "check",
   output_type =   "deprecated"
 ) ; my_df <- as.data.frame(list) #
@@ -58,11 +58,11 @@ start_time <- Sys.time() ; expo <- sen2r(
   # s2_levels =         "l1c",
   sel_sensor =        c("s2a", "s2b"),
   server =            "scihub",
-  order_lta =         TRUE,
+  order_lta =         FALSE,
   step_atmcorr =      "auto",    # "auto" !!!
-  max_cloud_safe =    10,
-  timewindow =        c(as.Date("2022-10-17"),
-                        as.Date("2022-10-18")),
+  max_cloud_safe =    100,
+  timewindow =        c(as.Date("2023-01-15"),
+                        as.Date("2023-01-15")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("32SPF"),
@@ -80,8 +80,8 @@ start_time <- Sys.time() ; expo <- sen2r(
   path_l2a =          Temp_path,
   path_out =          Data_path,
   thumbnails =        FALSE,
-  parallel =          3,       # MAX speed / CPU load
-  processing_order =  "mixed"  # MAX speed / CPU load
+  parallel =          T,       # MAX speed / CPU load
+  processing_order =  4  # MAX speed / CPU load
 ) ; end_time <- Sys.time()
 cat("Runtime: ", round(as.numeric(difftime(end_time,start_time, units = "min")),
                                   digits = 3), "m", sep = "")

@@ -26,7 +26,7 @@ getwd()
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 # Load boundaries of reservoirs
-AOI_b <- sf::st_read("./Data/Berambadi_reservoirs.geojson")
+AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
 
 
@@ -53,7 +53,7 @@ CountPixels <- function(img, resrv) {
                                  ncols = ncol(img),
                                  nrows = nrow(img)))
   img_masked <- img * mask
-  px <- sum(values(img_masked) < 0, na.rm = TRUE)
+  px <- sum(values(img_masked) >= 0, na.rm = TRUE)
   return(px)
 }
 
@@ -95,6 +95,8 @@ CountPixelsAndCreateDataframe(SWI_images,   AOI_b, paste0("SWI",   ".csv"))
 #---
 CountPixelsAndCreateDataframe(LSWI_images,  AOI_b, paste0("LSWI",  ".csv"))
 CountPixelsAndCreateDataframe(MBWI_images,  AOI_b, paste0("MBWI",  ".csv"))
+
+
 # For NDVI change to: px <- sum(values(img_masked) < 0, na.rm = TRUE)
 #### Count Pixels And Create Dataframe ####
 # Function to count pixels within a reservoir.
@@ -104,7 +106,7 @@ CountPixels <- function(img, resrv) {
                                  ncols = ncol(img),
                                  nrows = nrow(img)))
   img_masked <- img * mask
-  px <- sum(values(img_masked) < 0, na.rm = TRUE)
+  px <- sum(values(img_masked) <= 0, na.rm = TRUE)
   return(px)
 }
 CountPixelsAndCreateDataframe(NDVI_images,  AOI_b, paste0("NDVI", ".csv"))
@@ -117,7 +119,7 @@ CountPixels <- function(img, resrv) {
                                  ncols = ncol(img),
                                  nrows = nrow(img)))
   img_masked <- img * mask
-  px <- sum(values(img_masked) == 0, na.rm = TRUE)
+  px <- sum(values(img_masked) == 1, na.rm = TRUE)
   return(px)
 }
 CountPixelsAndCreateDataframe(B1_1500_images, AOI_b, paste0("B1_1500", ".csv"))
