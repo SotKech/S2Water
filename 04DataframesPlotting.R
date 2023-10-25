@@ -97,7 +97,7 @@ for (i in 1:7) {
   
   # Filter the dataframe and assign it back to the same name
   assign(paste("result_df", i, sep = ""), df %>%
-           filter(Date >= as.Date("2022-01-01") & Date <= as.Date("2022-12-31")))
+           filter(Date >= as.Date("2017-01-01") & Date <= as.Date("2023-12-31")))
 }
 
 
@@ -138,4 +138,3 @@ for (i in 1:12) {
   progress <- round((i / 12) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }
-
