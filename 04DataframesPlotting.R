@@ -11,7 +11,7 @@
 
                             #### Package Import ####
 # pkgTest function loads and install packages only when are not installed yet.
-neededPackages <- c("raster", "sf", "dplyr", "ggplot2")
+neededPackages <- c("raster", "lubridate", "sf", "dplyr", "ggplot2")
 pkgTest <- function(x){
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}
@@ -22,14 +22,11 @@ for (package in neededPackages){pkgTest(package)}
 
                           #### Set up directories ####
 getwd()
-# Get a list of all TIF files in the ./Data/BOA/ directory.
-tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
-                        full.names = TRUE)
 # Load boundaries of reservoirs
 AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
 
-                          #### Set up directories ####
+
 generate_and_display_merged_plots <- function(data1, data2, data3,
                                               data4, data5, data6,
                                               data7, reservoir) {
@@ -39,12 +36,15 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
            within(get(paste("data", i, sep = "")),
                   Date <- as.Date(Date)))
   }
+  breaks.vec <- seq(lubridate::ymd("2017-01-01"), lubridate::ymd("2023-12-01"),
+                    by = "3 months")
   # Create the merged plot
   p <- ggplot() +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_line(data = data1,
-              aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
-    geom_bar( data = data2, alpha = 0.5, stat = "identity",
+              aes(x = Date, y = .data[[reservoir]], color = "AWEI"),
+              linetype = "dashed") +
+    geom_bar( data = data2, alpha = 0.4, stat = "identity",
               aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
     geom_line(data = data3,
               aes(x = Date, y = .data[[reservoir]], color = "MNDWI")) +
@@ -53,9 +53,11 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_line(data = data5,
               aes(x = Date, y = .data[[reservoir]], color = "NDWI")) +
     geom_line(data = data6,
-              aes(x = Date, y = .data[[reservoir]], color = "SWI")) +
+              aes(x = Date, y = .data[[reservoir]], color = "SWI"),
+              linetype = "dotdash") +
     geom_line(data = data7,
-              aes(x = Date, y = .data[[reservoir]], color = "MBWI")) +
+              aes(x = Date, y = .data[[reservoir]], color = "MBWI"),
+              linetype = "dashed") +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_point(data = data1,
                aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
@@ -70,19 +72,23 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_point(data = data7,
                aes(x = Date, y = .data[[reservoir]], color = "MBWI")) +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    scale_x_date(date_breaks = "10 days", date_labels = "%d-%m-%Y") +
+    scale_x_date(breaks = breaks.vec, date_labels = "%m-%Y") +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
            plot.title = element_text(hjust = 0.5)) +
     labs(title = paste(reservoir), color = "Indices") +
     scale_fill_manual(name = " ", values = c("B1_1500" = "orange")) +
+    scale_color_manual(values = c("AWEI" = "#f8766d",     "MNDWI" = "#2bd4d6",
+                                  "NDVI" = "#4daf4a", "NDWI" = "#377eb8",
+                                  "SWI" = "#f564e3",     "MBWI" = "#9e854e")) +
     xlab("Date") +
     ylab("Water Pixel Count") +
-    theme(legend.position = "top")
+    theme(legend.position = "top") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-  plot(p)
+  # plot(p)
   ggsave(paste0("./Output/Graph_",reservoir,".png", sep = ""),
-         plot = p, width = 12, height = 6.5, dpi = 300,)
+         plot = p, width = 17, height = 7, dpi = 400,)
 }
 
 # Read and assign CSV files to individual variables
@@ -90,16 +96,6 @@ for (i in 1:7) {
   file_path <- paste("./", c("AWEI", "B1_1500", "MNDWI", "NDVI", "NDWI", "SWI", "MBWI")[i], ".csv", sep = "")
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
-
-for (i in 1:7) {
-  # Get the dataframe
-  df <- get(paste("result_df", i, sep = ""))
-  
-  # Filter the dataframe and assign it back to the same name
-  assign(paste("result_df", i, sep = ""), df %>%
-           filter(Date >= as.Date("2017-01-01") & Date <= as.Date("2023-12-31")))
-}
-
 
 # Use a loop to generate the reservoir names and add them to the vector
 for (i in 1:12) {
