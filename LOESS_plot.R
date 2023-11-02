@@ -9,7 +9,7 @@ for (i in 1:7) {
 }
 
 # Define the column number to be considered
-res <- 27
+res <- 5
 
 # Remove rows where a condition is met in result_df2
 rows_to_remove <- which(result_df2[, res] > 0.000100)
@@ -52,6 +52,7 @@ add_to_plot <- function(p, df, color, label, linetype, loess_data) {
   return(p) # Return the modified plot
 }
 
+
 # Create an empty ggplot object
 p <- ggplot()
 
@@ -80,11 +81,11 @@ p <- p + xlab("Date") + ylab(paste0(colnames(f_df1)[res])) +
   scale_linetype_manual(values = linetype_vector) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         plot.title = element_text(hjust = 0.5)) +
-  labs(title = paste("Title"), color = "Indices") +
+  labs(title = paste0("LOESS of 6 indices"), color = "Indices") +
   scale_x_date(breaks = breaks.vec, date_labels = "%m-%Y") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Save the plot as an image
 print(p)
-ggsave(paste0("./Graph_", paste0(colnames(f_df1)[res]), ".png", sep = ""),
-       plot = p, width = 17, height = 7, dpi = 300) # Save the plot as an image file
+# ggsave(paste0("./Graph_", paste0(colnames(f_df1)[res]), ".png", sep = ""),
+#        plot = p, width = 17, height = 7, dpi = 300) # Save the plot as an image file

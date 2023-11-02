@@ -36,8 +36,8 @@ AOI <- sf::st_read("./Data/Berambadi_AOI.geojson")
 list <- sen2r::s2_list(
   tile =          "43PFP",
   orbit =         c("019", "062"),
-  time_interval =  c(as.Date("2019-04-02"),
-                     as.Date("2019-04-04")),
+  time_interval =  c(as.Date("2020-04-27"),
+                     as.Date("2020-04-27")),
   level =         "auto",
   server =        "scihub",
   # apihub = NA,                 # (Optional)   !! I can define apihub.txt 
@@ -50,7 +50,7 @@ write.csv(my_df, "./Berambadi.csv")
 # print(my_df)
 
 # Order images (Optional)
-# sen2r::s2_order(list)
+sen2r::s2_order(list)
 
 #### Start sen2r Download ####
 start_time <- Sys.time() ; expo <- sen2r(
@@ -60,8 +60,8 @@ start_time <- Sys.time() ; expo <- sen2r(
   order_lta =         T,              #############
   step_atmcorr =      'auto', #   "auto",
   max_cloud_safe =    10,
-  timewindow =        c(as.Date("2020-3-29"),
-                        as.Date("2021-12-29")),
+  timewindow =        c(as.Date("2019-04-27"),
+                        as.Date("2019-04-27")),
   extent =            AOI,
   extent_name =       "AOI",
   s2tiles_selected =  c("43PFP"),
