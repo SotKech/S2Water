@@ -20,10 +20,10 @@ for (i in seq_along(indices)) {
 }
 
 # Initialize variables
-res <- 15
+res <- 23
 
 # Remove rows where a condition is met in result_df2
-rows_to_remove <- which(result_df2[, res] > 0.000100)
+rows_to_remove <- which(result_df2[, res] > 0.001)
 f_df1 <- result_df1[-rows_to_remove, ]
 f_df3 <- result_df3[-rows_to_remove, ]
 f_df4 <- result_df4[-rows_to_remove, ]
@@ -74,7 +74,7 @@ breaks.vec <- seq(lubridate::ymd("2017-01-01"),
                   lubridate::ymd("2023-12-01"), by = "3 months")
 
 # Create an empty plot
-combined_plot <- ggplot() + labs(title = "LOESS and local extremes",
+combined_plot <- ggplot() + labs(title = "Kamech",
                                  x = "Date", y = "Predicted Values") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         plot.title = element_text(hjust = 0.5)) +
@@ -103,6 +103,22 @@ for (i in seq_along(data_frames)) {
     geom_point(data = df_peaks, aes(x = Date, y = y_pred, color = "Peaks")) +
     geom_point(data = df_valleys, aes(x = Date, y = y_pred, color = "Valleys"))
 }
+
+
+
+
+
+
+
+##################################################################################
+insitu <- read.csv("./Data/Surface_Volume_Kamech_2017-2023.csv")
+insitu$Date <- as.Date(insitu$Date)
+insitu$S_Km2 <- insitu$S_m2 * 1e-6
+
+combined_plot <- combined_plot + geom_line(data = insitu, aes(x = Date, y = S_Km2, color = "black"))
+##################################################################################
+
+
 
 # Add a legend for colors
 combined_plot <- combined_plot +

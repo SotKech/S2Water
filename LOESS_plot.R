@@ -12,7 +12,7 @@ for (i in 1:7) {
 res <- 5
 
 # Remove rows where a condition is met in result_df2
-rows_to_remove <- which(result_df2[, res] > 0.000100)
+rows_to_remove <- which(result_df2[, res] > 0.001)
 f_df1 <- result_df1[-rows_to_remove, ]
 f_df2 <- result_df2
 f_df3 <- result_df3[-rows_to_remove, ]

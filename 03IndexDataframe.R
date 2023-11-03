@@ -75,7 +75,7 @@ CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
       col_px <- paste("Reservoir", j, "px", sep = "_")
       col_area <- paste("Reservoir", j, "area(Km2)", sep = "_")
       row[[col_px]] <- pixels
-      row[[col_area]] <- pixels * 1e-6
+      row[[col_area]] <- pixels * 1e-4 # (10mx10m=100m2->1x100xm2->1/10^6x10^2)
     }
     # Append row.
     result_df <- dplyr::bind_rows(result_df, row) 
