@@ -1,17 +1,17 @@
 #'
-#'                      MGI Internship  :   S2Water - 04DataframePlotting.R
+#'                      MGI Internship  :   S2Water - 05InsituComparison.R
 #'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-09-14
-#'                      Last update     :   2023-09-15
+#'                      Created         :   2023-11-05
+#'                      Last update     :   2023-11-07
 #'                      R Version       :   4.3.1
-#'                      Packages        :   raster, sf, dplyr
+#'                      Packages        :   lubridate, dplyr, ggplot2
 #'                      LICENSE         :   CC BY-NC-SA 4.0
 #'
 
 
 #### Package Import ####
 # pkgTest function loads and install packages only when are not installed yet.
-neededPackages <- c("raster", "lubridate", "sf", "dplyr", "ggplot2")
+neededPackages <- c("lubridate", "dplyr", "ggplot2")
 pkgTest <- function(x){
   if (x %in% rownames(installed.packages()) == FALSE){
     install.packages(x, dependencies= TRUE)}

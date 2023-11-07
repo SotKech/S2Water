@@ -4,7 +4,7 @@
 #'                      Created         :   2023-09-13
 #'                      Last update     :   2023-09-13
 #'                      R Version       :   4.3.1
-#'                      Packages        :   base, raster, ggplot2, sf
+#'                      Packages        :   raster, ggplot2, sf
 #'                      LICENSE         :   CC BY-NC-SA 4.0
 #'
 
