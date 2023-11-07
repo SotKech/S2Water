@@ -28,7 +28,9 @@ tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
 # Load boundaries of reservoirs
 AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
-
+# Create Indcies folder
+Indices_path <- "./Indices"
+if (!dir.exists(Indices_path)){dir.create(Indices_path)} 
 
                             #### Load Index Images ####
 # Function to get a list of TIF
@@ -83,7 +85,7 @@ CountPixelsAndCreateDataframe <- function(Index_images, AOI_b, output_file) {
     progress <- round((i / length(Index_images)) * 100, 2)
     cat(paste0("\r", progress, "%"))
   }
-  write.csv(result_df, file = output_file)
+  write.csv(result_df, file = file.path("./Indices/", output_file))
 }
 
 # Create and export Dataframs
@@ -93,7 +95,7 @@ CountPixelsAndCreateDataframe(MNDWI_images, AOI_b, paste0("MNDWI", ".csv"))
 CountPixelsAndCreateDataframe(NDWI_images,  AOI_b, paste0("NDWI",  ".csv"))
 CountPixelsAndCreateDataframe(SWI_images,   AOI_b, paste0("SWI",   ".csv"))
 #---
-CountPixelsAndCreateDataframe(LSWI_images,  AOI_b, paste0("LSWI",  ".csv"))
+# CountPixelsAndCreateDataframe(LSWI_images,  AOI_b, paste0("LSWI",  ".csv"))
 CountPixelsAndCreateDataframe(MBWI_images,  AOI_b, paste0("MBWI",  ".csv"))
 
 
@@ -110,6 +112,7 @@ CountPixels <- function(img, resrv) {
   return(px)
 }
 CountPixelsAndCreateDataframe(NDVI_images,  AOI_b, paste0("NDVI", ".csv"))
+
 # For B1_1500 change to: px <- sum(values(img_masked) == 0, na.rm = TRUE) ##############or 1500
 #### Count Pixels And Create Dataframe ####
 # Function to count pixels within a reservoir.

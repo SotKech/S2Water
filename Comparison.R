@@ -25,7 +25,18 @@ getwd()
 # Load boundaries of reservoirs
 AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
+# Read and assign CSV files to individual variables
+for (i in 1:7) {
+  file_path <- paste("./Indices/",
+                     c("AWEI", "B1_1500", "MNDWI",
+                       "NDVI", "NDWI", "SWI", "MBWI")[i], ".csv", sep = "")
+  assign(paste("result_df", i, sep = ""), read.csv(file_path))
+}
 
+# In-situ data
+insitu <- read.csv("./Data/Surface_Volume_Lebna_2017-2023.csv")
+insitu$Date <- as.Date(insitu$Date)
+insitu$S_Km2 <- insitu$S_m2 * 1e-6
 
 
 
@@ -101,32 +112,20 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
          plot = p, width = 17, height = 7, dpi = 400,)
 }
 
-# Read and assign CSV files to individual variables
-for (i in 1:7) {
-  file_path <- paste("./", c("AWEI", "B1_1500", "MNDWI", "NDVI", "NDWI", "SWI", "MBWI")[i], ".csv", sep = "")
-  assign(paste("result_df", i, sep = ""), read.csv(file_path))
-}
 
-
-
-#In-situ data
-
-insitu <- read.csv("./Data/Surface_Volume_Lebna_2017-2023.csv")
-insitu$Date <- as.Date(insitu$Date)
-insitu$S_Km2 <- insitu$S_m2 * 1e-6
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# # Use a loop to generate the reservoir names and add them to the vector
-# for (i in 1:1) {
-#   reservoir_name <- paste0("Reservoir_", i, "_area.Km2.")
-#   reservoirs <- c(character(0), reservoir_name)
-#   generate_and_display_merged_plots(result_df1, result_df2, result_df3,
-#                                     result_df4, result_df5, result_df6,
-#                                     result_df7, insitu, reservoirs)
-#   progress <- round((i / 12) * 100, 2)
-#   cat(paste0("\r", progress, "%"))
-# }
+# Use a loop to generate the reservoir names and add them to the vector
+for (i in 1:1) {
+  reservoir_name <- paste0("Reservoir_", i, "_area.Km2.")
+  reservoirs <- c(character(0), reservoir_name)
+  generate_and_display_merged_plots(result_df1, result_df2, result_df3,
+                                    result_df4, result_df5, result_df6,
+                                    result_df7, insitu, reservoirs)
+  progress <- round((i / 12) * 100, 2)
+  cat(paste0("\r", progress, "%"))
+}
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -93,7 +93,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
 
 # Read and assign CSV files to individual variables
 for (i in 1:7) {
-  file_path <- paste("./", c("AWEI", "B1_1500", "MNDWI", "NDVI", "NDWI", "SWI", "MBWI")[i], ".csv", sep = "")
+  file_path <- paste("./Indices/", c("AWEI", "B1_1500", "MNDWI", "NDVI", "NDWI", "SWI", "MBWI")[i], ".csv", sep = "")
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
 
@@ -140,8 +140,11 @@ for (i in 1:12) {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-data <- read.csv('Flags.csv',sep=",")
-Level <- data$Above_10_cloud
+data <- read.csv('./Indices/Flags.csv', sep=",")
+
+# Use interchangeably
+Level <- data$Level
+Manual <- data$Above_10_cloud
 
 
 generate_and_display_merged_plots <- function(data1, data2, data3,
@@ -238,11 +241,6 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
 }
 
 
-
-
-
-
-
 # Use a loop to generate the reservoir names and add them to the vector
 for (i in 1:12) {
   reservoir_name <- paste0("Reservoir_", i, "_px")
@@ -253,7 +251,6 @@ for (i in 1:12) {
   progress <- round((i / 12) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }
-
 
 # Loop through Reservoir columns from 1 to 12
 for (i in 1:12) {
@@ -272,12 +269,12 @@ for (i in 1:12) {
   f_df5 <- result_df5[-rows_to_remove, ]
   f_df6 <- result_df6[-rows_to_remove, ]
   f_df7 <- result_df7[-rows_to_remove, ]
-  data1  <- data[-rows_to_remove, ] ;  Level1 <- data1$Level
+  data1  <- data[-rows_to_remove, ] ;  Manual <- data1$Above_10_cloud
   
   # Plot the current Reservoir column
   generate_and_display_merged_plots(f_df1, f_df2, f_df3,
                                     f_df4, f_df5, f_df6,
-                                    f_df7, reservoirs, Level1)
+                                    f_df7, reservoirs, Manual)
   progress <- round((i / 12) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }

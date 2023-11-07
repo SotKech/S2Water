@@ -23,10 +23,10 @@ for (package in neededPackages){pkgTest(package)}
 # Create directories.
 getwd() ; # setwd("C:/Projects/S2Water")
 Data_path   <- "./Data"
-# Output_path <- "./Output"
+Output_path <- "./Output"
 Temp_path   <- "./sen2r_temp" # folder to store downloaded SAFE
 if (!dir.exists(Data_path))   {dir.create(Data_path)}
-# if (!dir.exists(Output_path)) {dir.create(Output_path)}
+if (!dir.exists(Output_path)) {dir.create(Output_path)}
 if (!dir.exists(Temp_path))    {dir.create(Temp_path)} 
 # Load Area Of Interest.
 AOI <- sf::st_read("./Data/Lebna_catchment_boundaries.geojson")

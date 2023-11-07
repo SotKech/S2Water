@@ -15,7 +15,7 @@ invisible(sapply(neededPackages, pkgTest))
 # Read and assign CSV files to individual variables
 indices <- c("AWEI", "B1_1500", "MBWI", "MNDWI", "NDVI", "NDWI", "SWI")
 for (i in seq_along(indices)) {
-  file_path <- paste("./", indices[i], ".csv", sep = "")
+  file_path <- paste("./Indices/", indices[i], ".csv", sep = "")
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
 # Read and adjsut insitu data
