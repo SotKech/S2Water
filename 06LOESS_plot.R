@@ -39,7 +39,7 @@ for (i in 1:7) {
 
               #### Define reservoir and remove cloudy days ####
 # Define the column number of reservoir
-res <- 5
+res <- 27
 
 # Remove rows where a condition is met in result_df2 (B1_1500)
 rows_to_remove <- which(result_df2[, res] > 0.001)
@@ -125,5 +125,9 @@ p <- p + xlab("Date") + ylab(paste0(colnames(f_df1)[res])) +
 
 # Save the plot as an image
 print(p)
-# ggsave(paste0("./Graph_", paste0(colnames(f_df1)[res]), ".png", sep = ""),
-#        plot = p, width = 17, height = 7, dpi = 300)
+ggsave(paste0("./Graph_", paste0(colnames(f_df1)[res]), ".png", sep = ""),
+       plot = p, width = 17, height = 7, dpi = 300)
+
+
+
+
