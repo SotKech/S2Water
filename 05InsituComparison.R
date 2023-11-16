@@ -33,6 +33,11 @@ for (i in 1:7) {
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
 
+reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
+                       "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
+                       "Reservoir 11", "Ennar")
+
+
 # In-situ data
 insitu <- read.csv("./Data/Surface_Volume_Kamech_2017-2023.csv")
 insitu$Date <- as.Date(insitu$Date)
@@ -60,8 +65,6 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_line(data = data1,
               aes(x = Date, y = .data[[reservoir]], color = "AWEI"),
               linetype = "dashed") +
-    # geom_bar( data = data2, alpha = 0.4, stat = "identity",
-    #           aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
     geom_line(data = data3,
               aes(x = Date, y = .data[[reservoir]], color = "MNDWI")) +
     geom_line(data = data4,
@@ -74,8 +77,6 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_line(data = data7,
               aes(x = Date, y = .data[[reservoir]], color = "MBWI"),
               linetype = "dashed") +
-    # geom_line(data = insitu,
-    #           aes(x = Date, y = V_3, color = "INSITU")) +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_point(data = data1,
                aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
@@ -96,8 +97,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
           plot.title = element_text(hjust = 0.5)) +
-    labs(title = "Kamech", color = "Indices") +
-    # scale_fill_manual(name = " ", values = c("B1_1500" = "orange")) +
+    labs(title = reservoir_name[j], color = "Indices") +
     scale_color_manual(values = c("AWEI" = "#f8766d",     "MNDWI" = "#2bd4d6",
                                   "NDVI" = "#4daf4a",     "NDWI" = "#377eb8",
                                   "SWI" = "#f564e3",      "MBWI" = "#9e854e",
@@ -108,53 +108,37 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
   plot(p)
-  ggsave(paste0("./Output/Graph_",reservoir,".png", sep = ""),
+  ggsave(paste0("./Output/Graphs/Insitu_", paste(j,"_", sep = ""),
+                reservoir_name[j],".png", sep = ""),
          plot = p, width = 17, height = 7, dpi = 400,)
 }
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 
-# # Use a loop to generate the reservoir names and add them to the vector
-# for (i in 1:1) {
-#   reservoir_name <- paste0("Reservoir_", i, "_area.Km2.")
-#   reservoirs <- c(character(0), reservoir_name)
-#   generate_and_display_merged_plots(result_df1, result_df2, result_df3,
-#                                     result_df4, result_df5, result_df6,
-#                                     result_df7, insitu, reservoirs)
-#   progress <- round((i / 12) * 100, 2)
-#   cat(paste0("\r", progress, "%"))
-# }
+# Define j. (j = 1) for Lebna | (j = 10) for Kamech
+j <- 10
+# Define the column name
+reservoir_col <- paste0("Reservoir_", j, "_area_ha")
+reservoirs <- c(character(0), reservoir_col)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Find row indices in df1 where the column value is greater than 0
+rows_to_remove <- which(result_df2[reservoirs] > 0.001)
 
-# Loop through Reservoir columns from 1 to 12
-for (i in 10:10) {
-  # Define the column name
-  reservoir_name <- paste0("Reservoir_", i, "_area.Km2.")
-  reservoirs <- c(character(0), reservoir_name)
+# Remove corresponding rows from all data frames
+f_df1 <- result_df1[-rows_to_remove, ]
+f_df2 <- result_df2
+f_df3 <- result_df3[-rows_to_remove, ]
+f_df4 <- result_df4[-rows_to_remove, ]
+f_df5 <- result_df5[-rows_to_remove, ]
+f_df6 <- result_df6[-rows_to_remove, ]
+f_df7 <- result_df7[-rows_to_remove, ]
+insitu_new <- insitu[-rows_to_remove, ]
 
-  # Find row indices in df1 where the column value is greater than 0
-  rows_to_remove <- which(result_df2[reservoirs] > 0.001)
+# Plot the current Reservoir column
+generate_and_display_merged_plots(f_df1, f_df2, f_df3,
+                                  f_df4, f_df5, f_df6,
+                                  f_df7, insitu, reservoirs)
 
-  # Remove corresponding rows from all data frames
-  f_df1 <- result_df1[-rows_to_remove, ]
-  f_df2 <- result_df2
-  f_df3 <- result_df3[-rows_to_remove, ]
-  f_df4 <- result_df4[-rows_to_remove, ]
-  f_df5 <- result_df5[-rows_to_remove, ]
-  f_df6 <- result_df6[-rows_to_remove, ]
-  f_df7 <- result_df7[-rows_to_remove, ]
-  insitu_new <- insitu[-rows_to_remove, ]
-
-  # Plot the current Reservoir column
-  generate_and_display_merged_plots(f_df1, f_df2, f_df3,
-                                    f_df4, f_df5, f_df6,
-                                    f_df7, insitu, reservoirs)
-  progress <- round((i / 12) * 100, 2)
-  cat(paste0("\r", progress, "%"))
-}
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,7 +156,7 @@ for (i in seq_along(df_list)) {
   # Merge dataframes based on common dates
   common_dates_df <- merge(df_list[[i]], insitu_new, by = "Date")
   # Extract the common data
-  common_set1 <- common_dates_df$Reservoir_10_area.Km2.
+  common_set1 <- common_dates_df[[paste0(reservoir_col)]]
   common_set2 <- common_dates_df$S_ha
   # Calculate RMSE
   rmse <- sqrt(mean((common_set1 - common_set2)^2))
@@ -194,7 +178,9 @@ Validation_df <- data.frame(Indices = indices, RMSE = rmse_vec,
 
 # Print the results dataframe
 print(Validation_df)
-
+write.csv(Validation_df, paste0("./Output/Indices_", paste(j,"_", sep = ""),
+                                reservoir_name[j], ".csv", sep = ""))
+                                
 
 
 
