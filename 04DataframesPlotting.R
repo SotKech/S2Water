@@ -54,8 +54,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
   p <- ggplot() +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_line(data = data1,
-              aes(x = Date, y = .data[[reservoir]], color = "AWEI"),
-              linetype = "dashed") +
+              aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
     # geom_bar( data = data2, alpha = 0.4, stat = "identity",
     #           aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
     geom_line(data = data3,
@@ -65,11 +64,9 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_line(data = data5,
               aes(x = Date, y = .data[[reservoir]], color = "NDWI")) +
     geom_line(data = data6,
-              aes(x = Date, y = .data[[reservoir]], color = "SWI"),
-              linetype = "dotdash") +
+              aes(x = Date, y = .data[[reservoir]], color = "SWI")) +
     geom_line(data = data7,
-              aes(x = Date, y = .data[[reservoir]], color = "MBWI"),
-              linetype = "dashed") +
+              aes(x = Date, y = .data[[reservoir]], color = "MBWI")) +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_point(data = data1,
                aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
@@ -94,7 +91,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
                                   "NDVI" = "#4daf4a", "NDWI" = "#377eb8",
                                   "SWI" = "#f564e3",     "MBWI" = "#9e854e")) +
     xlab("Date") +
-    ylab("Water Surface ha") +
+    ylab("Water Surface (ha)") +
     theme(legend.position = "top") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 

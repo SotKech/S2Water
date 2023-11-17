@@ -53,8 +53,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
   p <- ggplot() +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_line(data = data1,
-              aes(x = Date, y = .data[[reservoir]], color = "AWEI"),
-              linetype = "dashed") +
+              aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
     # geom_bar( data = data2, alpha = 0.4, stat = "identity",
     #           aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
     geom_line(data = data3,
@@ -64,11 +63,9 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_line(data = data5,
               aes(x = Date, y = .data[[reservoir]], color = "NDWI")) +
     geom_line(data = data6,
-              aes(x = Date, y = .data[[reservoir]], color = "SWI"),
-              linetype = "dotdash") +
+              aes(x = Date, y = .data[[reservoir]], color = "SWI")) +
     geom_line(data = data7,
-              aes(x = Date, y = .data[[reservoir]], color = "MBWI"),
-              linetype = "dashed") +
+              aes(x = Date, y = .data[[reservoir]], color = "MBWI")) +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_point(data = data1,
                aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
@@ -122,7 +119,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
 
 
     xlab("Date") +
-    ylab("Water Pixel Count") +
+    ylab("Water Surface (ha)") +
     theme(legend.position = "top") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -148,11 +145,11 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
 # Loop through Reservoir columns from 1 to 12
 for (j in 1:12) {
   # Define the column name
-  reservoir_col <- paste0("Reservoir_", j, "_px")
+  reservoir_col <- paste0("Reservoir_", j, "_area_ha")
   reservoirs <- c(character(0), reservoir_col)
 
   # Find row indices in df1 where the column value is greater than 0
-  rows_to_remove <- which(result_df2[, reservoirs] > 100)
+  rows_to_remove <- which(result_df2[, reservoirs] > 0.001)
 
   # Remove corresponding rows from all data frames
   f_df1 <- result_df1[-rows_to_remove, ]

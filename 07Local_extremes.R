@@ -40,14 +40,14 @@ reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
                        "Reservoir 11", "Ennar")
 
 # Read and adjsut insitu data
-insitu <- read.csv("./Data/Surface_Volume_Lebna_2017-2023.csv")
+insitu <- read.csv("./Data/Surface_Volume_Kamech_2017-2023.csv")
 insitu$Date <- as.Date(insitu$Date)
 insitu$S_ha <- insitu$S_m2 * 1e-4
 
 #### --- ####
 
 # Define the column number of reservoir
-res <- 5
+res <- 23
 # Hellping if as there is no loop yet
 if (res == 23) {
   j <- 10
@@ -125,7 +125,7 @@ breaks.vec <- seq(lubridate::ymd("2017-01-01"),
                   lubridate::ymd("2023-12-01"), by = "3 months")
 # Create an empty plot
 combined_plot <- ggplot() + labs(title = reservoir_name[j],
-                                 x = "Date", y = "Predicted Values") +
+                                 x = "Date", y = "Water Surface (ha)") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         plot.title =  element_text(hjust = 0.5)) +
   scale_x_date(breaks = breaks.vec, date_labels = "%m-%Y") +

@@ -63,8 +63,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_line(data = insitu,
               aes(x = Date, y = S_ha, color = "INSITU")) +
     geom_line(data = data1,
-              aes(x = Date, y = .data[[reservoir]], color = "AWEI"),
-              linetype = "dashed") +
+              aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
     geom_line(data = data3,
               aes(x = Date, y = .data[[reservoir]], color = "MNDWI")) +
     geom_line(data = data4,
@@ -72,11 +71,9 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     geom_line(data = data5,
               aes(x = Date, y = .data[[reservoir]], color = "NDWI")) +
     geom_line(data = data6,
-              aes(x = Date, y = .data[[reservoir]], color = "SWI"),
-              linetype = "dotdash") +
+              aes(x = Date, y = .data[[reservoir]], color = "SWI")) +
     geom_line(data = data7,
-              aes(x = Date, y = .data[[reservoir]], color = "MBWI"),
-              linetype = "dashed") +
+              aes(x = Date, y = .data[[reservoir]], color = "MBWI")) +
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_point(data = data1,
                aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
@@ -103,7 +100,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
                                   "SWI" = "#f564e3",      "MBWI" = "#9e854e",
                                   "INSITU" = "black")) +
     xlab("Date") +
-    ylab(bquote("Water Surface ha")) +
+    ylab(bquote("Water Surface (ha)")) +
     theme(legend.position = "top") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
