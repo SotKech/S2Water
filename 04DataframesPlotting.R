@@ -26,11 +26,35 @@ getwd()
 Graphs_path   <- "./Output/Graphs"
 if (!dir.exists(Graphs_path))   {dir.create(Graphs_path)}
 # Load boundaries of reservoirs
-AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+AOI_b <- sf::st_read("./Data/Berambadi_reservoirs.geojson")
 # Load reservoir names
-reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
-                       "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
-                       "Reservoir 11", "Ennar")
+# reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
+#                        "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
+#                        "Reservoir 11", "Ennar")
+
+
+reservoir_name <- list("Maddur Tank (NW)", "Berambadi Dam",
+                       "Channamallipura_1 (NW)", "Channamallipura_2 (NW)",
+                       "Channamallipura_3 (NW)", "No_Name_6 (NW)",
+                       "Kunagahalli Dam (SW)", "Berambadi Temple Tank",
+                       "Gopalaswamy Temple Tank (SW)", "No_Name_10 (NE)",
+                       "No_Name_11 (Center)", "Kannegala Village Tank",
+                       "Kannegala River Tank", "Honnegowdanahalli Tank (SE)",
+                       "id_15", "Kunagahalli Tank (SW)", "id_17", "id_18",
+                       "id_19", "No_Name_20 (NW)", "No_Name_22 (SW)",
+                       "No_Name_23 (SW)", "No_Name_24 (SW)", "Parvatana Katte",
+                       "Gopalapura Tank", "Devarahalli Dam (SE)", 
+                       "Motana katte", "No_Name_29 (Center)", "Kutunur Tank",
+                       "No_Name_31 (Center)", "No_Name_32 (Center)",
+                       "No_Name_33 (Center)", "No_Name_34 (NE)",
+                       "No_Name_35 (NE)", "Gopalaswami Dam (SE)",
+                       "Kaggaladundi Temple Tank (NW)", "id_37",
+                       "Maramma Temple - Tank (NE)", "No_Name_40 (NE)",
+                       "No_Name_41 (SE)", "No_Name_43 (NW)", "Belavina Katte",
+                       "Kallipura Tank (SE)", "Forest Tank (SE)",
+                       "No_Name_47 (Center)", "No_Name_48 (SE)", "id_47",
+                       "No_Name_50 (SW)", "Lakki Katte", "Navilugundi Kere",
+                       "Kuruti katte")
 
 # Read and assign CSV files to individual variables
 for (i in 1:7) {
@@ -55,8 +79,8 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     geom_line(data = data1,
               aes(x = Date, y = .data[[reservoir]], color = "AWEI")) +
-    # geom_bar( data = data2, alpha = 0.4, stat = "identity",
-    #           aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
+    geom_bar( data = data2, alpha = 0.4, stat = "identity",
+              aes(x = Date, y = .data[[reservoir]], fill = "B1_1500")) +
     geom_line(data = data3,
               aes(x = Date, y = .data[[reservoir]], color = "MNDWI")) +
     geom_line(data = data4,
@@ -86,7 +110,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
     theme(axis.text.x = element_text(angle = 90, hjust = 1),
            plot.title = element_text(hjust = 0.5)) +
     labs(title = reservoir_name[j], color = "Indices") +
-    # scale_fill_manual(name = " ", values = c("B1_1500" = "orange")) +
+    scale_fill_manual(name = " ", values = c("B1_1500" = "orange")) +
     scale_color_manual(values = c("AWEI" = "#f8766d",     "MNDWI" = "#2bd4d6",
                                   "NDVI" = "#4daf4a", "NDWI" = "#377eb8",
                                   "SWI" = "#f564e3",     "MBWI" = "#9e854e")) +
@@ -118,13 +142,13 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Loop through Reservoir columns from 1 to 12
-for (j in 1:12) {
+for (j in 13:13) {
   # Define the column name
   reservoir_col <- paste0("Reservoir_", j, "_area_ha")
   reservoirs <- c(character(0), reservoir_col)
   
   # Find row indices in df1 where the column value is greater than 0
-  rows_to_remove <- which(result_df2[, reservoirs] > 0.001)
+  rows_to_remove <- which(result_df2[, reservoirs] > 0.001) #0.001
   
   # Remove corresponding rows from all data frames
   f_df1 <- result_df1[-rows_to_remove, ]
@@ -139,7 +163,7 @@ for (j in 1:12) {
   generate_and_display_merged_plots(f_df1, f_df2, f_df3,
                                     f_df4, f_df5, f_df6,
                                     f_df7, reservoirs)
-  progress <- round((j / 12) * 100, 2)
+  progress <- round((j / 51) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }
 
