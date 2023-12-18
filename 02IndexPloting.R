@@ -1,15 +1,14 @@
 #'
-#'                      MGI Internship  :   S2Water - 02IndexPlotting
+#'                      MGI Internship  :   S2Water - 02IndexPlotting.R
 #'                      Author          :   Sotirios Kechagias
 #'                      Created         :   2023-09-13
-#'                      Last update     :   2023-09-13
+#'                      Last update     :   2023-12-18
 #'                      R Version       :   4.3.1
-#'                      Packages        :   raster, ggplot2, sf
+#'                      Packages        :   raster, sf, dplyr, ggplot2 
 #'                      LICENSE         :   CC BY-NC-SA 4.0
 #'
 
-
-                            #### Package Import ####
+#### Package Import ####
 # pkgTest is a helper function to load packages and  
 # install packages only when are not installed yet.
 neededPackages <- c("raster", "sf", "dplyr", "ggplot2")
@@ -21,20 +20,21 @@ pkgTest <- function(x){
 for (package in neededPackages){pkgTest(package)}
 
 
-                          #### Set up directories ####
+#### Set up directories ####
 getwd()
 # folder to store Plots
-Plots_path   <- "./Output/Plots/"                      
+Plots_path <- "./Output/Plots/"                      
 if (!dir.exists(Plots_path)){dir.create(Plots_path)}
 # Get a list of all TIF files in the working directory.
 tif_files <- list.files(path = "./Data/BOA", pattern = "\\.tif$",
                         full.names = TRUE)
 # Load boundaries of reservoirs
-AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+AOI <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 
 
-                            #### Load Index Images ####
-get_tif_files <- function(suffix) {              # Function to get a list of TIF
+#### Load Index Images ####
+# Function to get a list of TIF
+get_tif_files <- function(suffix) {              
   list.files(path = "./Output",
              pattern = paste0("\\_",suffix, "\\.tif$"),
              full.names = TRUE)
@@ -43,12 +43,11 @@ get_tif_files <- function(suffix) {              # Function to get a list of TIF
 # Get lists of TIF files with different suffixes
 NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
 MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
-SWI_images   <- get_tif_files("SWI")   ; B1_1500_images<- get_tif_files("B1_1500")
-MBWI_images  <- get_tif_files("MBWI")  ; LSWI_images <- get_tif_files("LSWI")
+SWI_images   <- get_tif_files("SWI")   ; MBWI_images  <- get_tif_files("MBWI")
+B1_1500_images<- get_tif_files("B1_1500")
 
 
-
-                          #### Plotting Index Images####
+#### Plotting Index Images####
 # Function to create and export raster plots
 create_raster_plot <- function(image, fill_colors, index, lim, brk) {
   x <- raster(image)                      # Convert raster image to a data frame
@@ -57,14 +56,12 @@ create_raster_plot <- function(image, fill_colors, index, lim, brk) {
     geom_raster(data = raster_df, aes(x = x, y = y, fill = raster_df[, 3])) +
     scale_fill_gradientn(colors = fill_colors, limits = lim,
                          na.value = "transparent", breaks = brk) +
-    geom_sf(data = AOI_b, fill = "transparent", color = "red", size = 1) +
-    geom_sf_text(data = AOI_b, aes(label = id), nudge_y = 500,
-                 color = "red", alpha = 0.75) +
+    geom_sf(data = AOI, fill = "transparent", color = "red", size = 1) +
+    geom_sf_text(data = AOI, aes(label = id),
+                 nudge_y = 500, color = "red",alpha = 0.75) +
     coord_sf() +
-    labs(
-      title = as.Date(substr(basename(image), 7, 14), format = "%Y%m%d"),
-      fill = index
-    ) +
+    labs(title = as.Date(substr(basename(image), 7, 14),
+                         format = "%Y%m%d"), fill = index) +
     theme_minimal() +
     theme(plot.title = element_text(hjust = 0.5)) + 
     xlab("Longitude") + ylab("Latitude")
@@ -75,7 +72,7 @@ create_raster_plot <- function(image, fill_colors, index, lim, brk) {
 }
 # Function to create plots for raster images
 create_plots <- function(img_list, plot_function, fill_colors, index, lim, brk){
-  lapply(img_list[1:length(img_list)],                                                        ##### you need to adjust for the images
+  lapply(img_list[1:length(img_list)],
          function(image) {plot_function(image, fill_colors, index, lim, brk)})
 }
 
@@ -86,12 +83,13 @@ lims <- c(-1, 1)        ; brks <- c(-1, -0.5, 0, 0.5, 1)
 AWEI_lims <- c(-20, 20) ; AWEI_brks <- c(-20, -10, 0, 10, 20)
 
 # Call the create_plots function with the appropriate arguments
-create_plots(B1_1500_images, create_raster_plot, c("green", "white"), "B1_1500", c(0, 1), c(0, 1))
 create_plots(NDVI_images,  create_raster_plot, ndvi_col,   "NDVI",  lims, brks)
 create_plots(NDWI_images,  create_raster_plot, other_cols, "NDWI",  lims, brks)
 create_plots(MNDWI_images, create_raster_plot, other_cols, "MNDWI", lims, brks)
 create_plots(SWI_images,   create_raster_plot, other_cols, "SWI",   lims, brks)
-create_plots(LSWI_images,  create_raster_plot, other_cols, "LSWI",  lims, brks)
-create_plots(MBWI_images,  create_raster_plot, c("darkgreen" ,"green", "lightgreen", "white", "blue"), "MBWI",  c(-20000, 5000), c(-20000, -15000, -10000, -5000, +0, 5000))
-create_plots(AWEI_images,  create_raster_plot, other_cols, "AWEI",  AWEI_lims,
-             AWEI_brks)
+create_plots(AWEI_images,  create_raster_plot, other_cols, "AWEI",  lims, brks)
+create_plots(B1_1500_images, create_raster_plot, c("green", "white"), "B1_1500",
+             c(0, 1), c(0, 1))
+create_plots(MBWI_images,  create_raster_plot,
+             c("darkgreen" ,"green", "lightgreen", "white", "blue"), "MBWI",
+             c(-20000, 5000), c(-20000, -15000, -10000, -5000, +0, 5000))
