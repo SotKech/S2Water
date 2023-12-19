@@ -1,38 +1,32 @@
 #'
-#'                      MGI Internship  :   S2Water - LOESS_plot
+#'                      MGI Internship  :   S2Water - LOESS_plot.R
 #'                      Author          :   Sotirios Kechagias
 #'                      Created         :   2023-09-21
-#'                      Last update     :   2023-11-07
+#'                      Last update     :   2023-12-19
 #'                      R Version       :   4.3.1
-#'                      Packages        :   base, raster, ggplot2, sf
+#'                      Packages        :   zoo, ggplot2
 #'                      LICENSE         :   CC BY-NC-SA 4.0
 #'
 
 #### Package Import ####
-#  pkgTest is a function that loads packages and installsthem only when they
-#  are not installed yet.
-pkgTest <- function(x) {
-  if (x %in% rownames(installed.packages()) == FALSE) {
-    install.packages(x, dependencies= TRUE)
-  }
+# pkgTest function loads and install packages only when are not installed yet.
+neededPackages <- c("zoo", "ggplot2")
+pkgTest <- function(x){
+  if (x %in% rownames(installed.packages()) == FALSE){
+    install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)
 }
-# Necessary Packages
-neededPackages <- c("zoo", "ggplot2")
-
-for (package in neededPackages) {
-  pkgTest(package)
-}
+for (package in neededPackages){pkgTest(package)}
 
 #### Set directory ####
-getwd()
-# setwd("C:/Projects/S2Water")
-# Read and assign CSV files to individual variables
-
-reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
-                       "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
-                       "Reservoir 11", "Ennar")
-
+getwd() # setwd("C:/Projects/S2Water")
+# Create Graphs folder if does not exist
+Graphs_path   <- "./Output/Graphs"
+if (!dir.exists(Graphs_path))   {dir.create(Graphs_path)}
+# Load boundaries of reservoirs
+AOI <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+# Load reservoir names
+reservoir_name <- AOI$Name
 
 #### Load index csv ####
 # Read and assign CSV files to individual variables
@@ -43,10 +37,6 @@ for (i in 1:7) {
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
 
-
-
-
-
 #### Basic functions ####
 # Function to calculate loess fit for each data frame
 calculate_loess <- function(df) {
@@ -55,19 +45,18 @@ calculate_loess <- function(df) {
   df$Date <- as.Date(df$Date)
   x <- as.numeric(df$Date)
   y <- df[, reservoirs]
-  
   # Calculate the loess fit
   loess_fit <- loess(y ~ x, span = 0.15, data = df)
   y_pred <- predict(loess_fit, data.frame(x = x))
-  
   return(list(x = as.Date(x), y_pred = y_pred))
 }
 
 # Function to add data to the plot
 add_to_plot <- function(p, df, color, label, loess_data) {
-  p <- p + geom_line(data = df, aes(x = loess_data$x, y = loess_data$y_pred,
-                                    color = label), size = 0.75) +
-    
+  p <- p +
+    geom_line(data = df, aes(x = loess_data$x,
+                             y = loess_data$y_pred, color = label),
+              size = 0.75) +
     geom_text(data = data.frame(x = max(loess_data$x),
                                 y = max(loess_data$y_pred), label = label),
               aes(x = max(loess_data$x), y = max(loess_data$y_pred),
@@ -111,8 +100,6 @@ generate_loess_plot <- function(data_frames, my_colors,
     labs(title = paste0(reservoir_name[j]), color = "Indices") +
     scale_x_date(breaks = breaks.vec, date_labels = "%m-%Y") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
-  # Save the plot as an image
   # print(p)
   ggsave(
     paste0("./Output/Graphs/LOESS_", paste(j, "_", sep = ""), reservoir_name[j],
@@ -126,7 +113,7 @@ my_colors <- c('#f8766d', '#9e854e', '#2bd4d6', '#4daf4a', '#377eb8', '#f564e3')
 labels <- c('AWEI', 'MBWI', 'MNDWI', 'NDVI', 'NDWI', 'SWI')
 
 # Loop through Reservoir columns from 1 to 12
-for (j in 1:12) {
+for (j in 1:51) {
   # Define the column name
   reservoir_col <- paste0("Reservoir_", j, "_area_ha")
   reservoirs <- c(character(0), reservoir_col)
@@ -146,6 +133,6 @@ for (j in 1:12) {
   # Plot the current Reservoir column
   generate_loess_plot(data_frames, my_colors, labels, reservoir_name, j)
   
-  progress <- round((j / 12) * 100, 2)
+  progress <- round((j / 51) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }

@@ -22,9 +22,36 @@ AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 # Load flags
 data <- read.csv('./Indices/Flags.csv', sep=",")
 # Load reservoir names
-reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
-                       "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
-                       "Reservoir 11", "Ennar")
+# reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
+#                        "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
+#                        "Reservoir 11", "Ennar")
+
+
+reservoir_name <- list("Maddur Tank (NW)", "Berambadi Dam",
+                       "Channamallipura_1 (NW)", "Channamallipura_2 (NW)",
+                       "Channamallipura_3 (NW)", "No_Name_6 (NW)",
+                       "Kunagahalli Dam (SW)", "Berambadi Temple Tank",
+                       "Gopalaswamy Temple Tank (SW)", "No_Name_10 (NE)",
+                       "No_Name_11 (Center)", "Kannegala Village Tank",
+                       "Kannegala River Tank", "Honnegowdanahalli Tank (SE)",
+                       "id_15", "Kunagahalli Tank (SW)", "id_17", "id_18",
+                       "id_19", "No_Name_20 (NW)", "No_Name_22 (SW)",
+                       "No_Name_23 (SW)", "No_Name_24 (SW)", "Parvatana Katte",
+                       "Gopalapura Tank", "Devarahalli Dam (SE)", 
+                       "Motana katte", "No_Name_29 (Center)", "Kutunur Tank",
+                       "No_Name_31 (Center)", "No_Name_32 (Center)",
+                       "No_Name_33 (Center)", "No_Name_34 (NE)",
+                       "No_Name_35 (NE)", "Gopalaswami Dam (SE)",
+                       "Kaggaladundi Temple Tank (NW)", "id_37",
+                       "Maramma Temple - Tank (NE)", "No_Name_40 (NE)",
+                       "No_Name_41 (SE)", "No_Name_43 (NW)", "Belavina Katte",
+                       "Kallipura Tank (SE)", "Forest Tank (SE)",
+                       "No_Name_47 (Center)", "No_Name_48 (SE)", "id_47",
+                       "No_Name_50 (SW)", "Lakki Katte", "Navilugundi Kere",
+                       "Kuruti katte")
+
+
+
 
 # Read and assign CSV files to individual variables
 for (i in 1:7) {
@@ -143,7 +170,7 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
 # }
 # 
 # Loop through Reservoir columns from 1 to 12
-for (j in 1:12) {
+for (j in 1:51) {
   # Define the column name
   reservoir_col <- paste0("Reservoir_", j, "_area_ha")
   reservoirs <- c(character(0), reservoir_col)
@@ -166,7 +193,7 @@ for (j in 1:12) {
   generate_and_display_merged_plots(f_df1, f_df2, f_df3,
                                     f_df4, f_df5, f_df6,
                                     f_df7, reservoirs, Level) # Level/Manual
-  progress <- round((j / 12) * 100, 2)
+  progress <- round((j / 51) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }
 

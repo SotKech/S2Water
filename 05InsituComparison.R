@@ -23,7 +23,9 @@ for (package in neededPackages){pkgTest(package)}
 #### Set up directories ####
 getwd()
 # Load boundaries of reservoirs
-AOI_b <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+AOI <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+# Load reservoir names
+reservoir_name <- AOI$Name
 
 # Read and assign CSV files to individual variables
 for (i in 1:7) {
@@ -33,18 +35,10 @@ for (i in 1:7) {
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
 
-reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
-                       "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
-                       "Reservoir 11", "Ennar")
-
-
 # In-situ data
 insitu <- read.csv("./Data/Surface_Volume_Kamech_2017-2023.csv")
 insitu$Date <- as.Date(insitu$Date)
 insitu$S_ha <- insitu$S_m2 * 1e-4
-
-
-
 
 generate_and_display_merged_plots <- function(data1, data2, data3,
                                               data4, data5, data6,
@@ -96,15 +90,14 @@ generate_and_display_merged_plots <- function(data1, data2, data3,
           plot.title = element_text(hjust = 0.5)) +
     labs(title = reservoir_name[j], color = "Indices") +
     scale_color_manual(values = c("AWEI" = "#f8766d",     "MNDWI" = "#2bd4d6",
-                                  "NDVI" = "#4daf4a",     "NDWI" = "#377eb8",
-                                  "SWI" = "#f564e3",      "MBWI" = "#9e854e",
+                                  "NDVI" = "#4daf4a",     "NDWI"  = "#377eb8",
+                                  "SWI"  = "#f564e3",     "MBWI"  = "#9e854e",
                                   "INSITU" = "black")) +
     xlab("Date") +
     ylab(bquote("Water Surface (ha)")) +
     theme(legend.position = "top") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
-  plot(p)
+  # plot(p)
   ggsave(paste0("./Output/Graphs/Insitu_", paste(j,"_", sep = ""),
                 reservoir_name[j],".png", sep = ""),
          plot = p, width = 17, height = 7, dpi = 400,)
@@ -138,7 +131,8 @@ generate_and_display_merged_plots(f_df1, f_df2, f_df3,
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#### RMSE, R2, BIAS ####
+
 # Store the dataframes in a list
 df_list <- list(f_df1, f_df3, f_df4, f_df5, f_df6, f_df7)
 
@@ -178,10 +172,3 @@ print(Validation_df)
 write.csv(Validation_df, paste0("./Output/Indices_", paste(j,"_", sep = ""),
                                 reservoir_name[j], ".csv", sep = ""))
                                 
-
-
-
-
-
-
-

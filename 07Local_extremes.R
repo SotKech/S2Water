@@ -9,24 +9,17 @@
 #'
 
 #### Package Import ####
-#  pkgTest is a function that loads packages and installsthem only when they
-#  are not installed yet.
-pkgTest <- function(x) {
-  if (x %in% rownames(installed.packages()) == FALSE) {
-    install.packages(x, dependencies= TRUE)
-  }
+# pkgTest function loads and install packages only when are not installed yet.
+neededPackages <- c("raster", "sf", "dplyr", "ggplot2", "lubridate")
+pkgTest <- function(x){
+  if (x %in% rownames(installed.packages()) == FALSE){
+    install.packages(x, dependencies= TRUE)}
   library(x, character.only = TRUE)
 }
-# Load necessary packages
-neededPackages <- c("raster", "sf", "dplyr", "ggplot2", "lubridate")
-
-for (package in neededPackages) {
-  pkgTest(package)
-}
+for (package in neededPackages){pkgTest(package)}
 
 #### Set directory ####
-getwd()
-# setwd("C:/Projects/S2Water")
+getwd() # setwd("C:/Projects/S2Water")
 
 # Read and assign CSV files to individual variables
 indices <- c("AWEI", "B1_1500", "MBWI", "MNDWI", "NDVI", "NDWI", "SWI")
@@ -34,17 +27,15 @@ for (i in seq_along(indices)) {
   file_path <- paste("./Indices/", indices[i], ".csv", sep = "")
   assign(paste("result_df", i, sep = ""), read.csv(file_path))
 }
-
-reservoir_name <- list("Lebna", "Akrane", "Ain Soudan", "Gombar", "Errouiguet",
-                       "El Hajl", "Ben Salem", "El Guitoun", "Gbail", "Kamech",
-                       "Reservoir 11", "Ennar")
-
+# Load boundaries of reservoirs
+AOI <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
+# Load reservoir names
+reservoir_name <- AOI$Name
 # Read and adjsut insitu data
 insitu <- read.csv("./Data/Surface_Volume_Kamech_2017-2023.csv")
 insitu$Date <- as.Date(insitu$Date)
 insitu$S_ha <- insitu$S_m2 * 1e-4
 
-#### --- ####
 
 # Define the column number of reservoir
 res <- 23
@@ -54,7 +45,6 @@ if (res == 23) {
 } else if (res == 5) {
   j <- 1
 }
-
 # Remove rows where a condition is met in result_df2
 rows_to_remove <- which(result_df2[, res] > 0.001)
 f_df1 <- result_df1[-rows_to_remove, ]
@@ -66,8 +56,10 @@ f_df7 <- result_df7[-rows_to_remove, ]
 
 # Define data and styling information
 data_frames <- list(f_df1, f_df3, f_df4, f_df5, f_df6, f_df7, insitu) # insitu
-linetype_vector <- c("dashed", "dashed", "solid", "solid", "solid", "dotdash", "solid")
-my_colors <- c('#f8766d', '#9e854e', '#2bd4d6', '#4daf4a', '#377eb8', '#f564e3', "black")
+linetype_vector <- c("dashed", "dashed", "solid","solid",
+                     "solid", "dotdash", "solid")
+my_colors <- c('#f8766d', '#9e854e', '#2bd4d6', '#4daf4a',
+               '#377eb8', '#f564e3',"black")
 labels <- c('AWEI', 'MBWI', 'MNDWI', 'NDVI', 'NDWI', 'SWI', "insitu")
 
 calculate_loess <- function(df, linetype, my_color, label) {
@@ -194,7 +186,7 @@ calculate_standard_deviation <- function(df) {
   # Print the result
   # print(SD_value)
   
-  # Now calculate the standard deviation of Y_Pred and Numeric_Date for each group
+  # Calculate the standard deviation of Y_Pred and Numeric_Date for each group
   SD_Date <- df %>%
     group_by(Group) %>%
     summarise(Std_Y_Pred = sd(y_pred),
@@ -204,13 +196,5 @@ calculate_standard_deviation <- function(df) {
   print(SD_Date)
 }
 
-##################################################################################
-
-# peaks_ordered <- all_peaks[order(all_peaks$Date, decreasing = F), ]
-# # peaks_ordered <- peaks_ordered[-13, ]
-# valleys_ordered <- all_valleys[order(all_valleys$Date, decreasing = F), ]
-# # valleys_ordered <- valleys_ordered[-19, ]
-# # valleys_ordered
-# calculate_standard_deviation(peaks_ordered)
-# calculate_standard_deviation(valleys_ordered)
+################################################################################
 
