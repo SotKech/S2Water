@@ -1,12 +1,19 @@
-#'
-#'                      MGI Internship  :   S2Water - 04DataframePlotting.R
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-09-14
-#'                      Last update     :   2023-12-18
-#'                      R Version       :   4.3.1
-#'                      Packages        :   raster,lubridate,sf,dplyr,ggplot2
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
+#' MGI Internship  :   S2Water - 04DataframePlotting.R
+#' Author          :   Sotirios Kechagias
+#' Created         :   2023-09-14
+#' Last update     :   2023-12-18
+#' R Version       :   4.3.1
+#' Packages        :   raster,lubridate,sf,dplyr,ggplot2
+#' LICENSE         :   CC BY-NC-SA 4.0
+#' Input           :   dataframes (csv) files of each index for all
+#'                     the reservoirs and images in ./Indices/
+#' Output          :   Plots of the indices estimation  WITHOUT clouds
+#'                     contamination dates in ./Output/Graphs/ 
+#' Optional output :   Plots of the indices estimation  WITHOUT clouds WITH 
+#'                     FLAGS ~ Either L1C images or manual downloaded images
+#'                     with cloud over tile <10% 
+#'                     * Needs ./Indices/Flags.csv 
+
 
                             #### Package Import ####
 # pkgTest function loads and install packages only when are not installed yet.

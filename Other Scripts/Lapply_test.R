@@ -1,12 +1,5 @@
-#'
-#'                      MGI Internship  :   S2Water - 03IndexDataframe
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-09-14
-#'                      Last update     :   2023-09-15
-#'                      R Version       :   4.3.1
-#'                      Packages        :   raster, sf, dplyr
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
+#' Test of lapply to determine if it is faster than loops
+#' Results: Not significant faster
 
 
                            #### Package Import ####
@@ -41,7 +34,7 @@ get_tif_files <- function(suffix) {
 NDVI_images  <- get_tif_files("NDVI")  ; NDWI_images <- get_tif_files("NDWI")
 MNDWI_images <- get_tif_files("MNDWI") ; AWEI_images <- get_tif_files("AWEI")
 SWI_images   <- get_tif_files("SWI")   ; B1_1500_images<- get_tif_files("B1_1500")
-MBWI_images  <- get_tif_files("MBWI")  ; LSWI_images <- get_tif_files("LSWI")
+MBWI_images  <- get_tif_files("MBWI")
 
 
                    #### Count Pixels And Create Dataframe ####

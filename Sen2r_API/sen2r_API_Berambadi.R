@@ -7,7 +7,9 @@
 #'  License         :   CC BY-NC-SA 4.0
 #'  Description     :   This  algorithm utilizing  "sen2r" package to  download, 
 #'                      stack bands & clip to AOI based on the given parameters.
-#'
+#'                      It is necessary to create the folders: Data, Output in
+#'                      order to store TIF images and products that can be used
+#'                      later.
 
 #### Package Import ####
 # pkgTest is a helper function to load packages and  

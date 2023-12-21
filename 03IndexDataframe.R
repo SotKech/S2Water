@@ -1,13 +1,16 @@
-#'
-#'                      MGI Internship  :   S2Water - 03IndexDataframe.R
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-09-14
-#'                      Last update     :   2023-12-18
-#'                      R Version       :   4.3.1
-#'                      Packages        :   raster, sf, dplyr
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
-
+#' MGI Internship  :   S2Water - 03IndexDataframe.R
+#' Author          :   Sotirios Kechagias
+#' Created         :   2023-09-14
+#' Last update     :   2023-12-18
+#' R Version       :   4.3.1
+#' Packages        :   raster, sf, dplyr
+#' LICENSE         :   CC BY-NC-SA 4.0
+#' Input           :   TIF images of spectral indices in ./Output/
+#'                     * previously calculated by 01IndexCalculation
+#' Output          :   Creation of dataframes (csv) files of each index for all
+#'                     the reservoirs and images in ./Indices/
+#'                     * WARNING: These dataframes contain dates with cloud 
+#'                                contamination
 
 #### Package Import ####
 # pkgTest function loads and install packages only when are not installed yet.

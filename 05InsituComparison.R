@@ -1,12 +1,16 @@
-#'
-#'                      MGI Internship  :   S2Water - 05InsituComparison.R
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-11-05
-#'                      Last update     :   2023-11-07
-#'                      R Version       :   4.3.1
-#'                      Packages        :   lubridate, dplyr, ggplot2
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
+#' MGI Internship  :   S2Water - 05InsituComparison.R
+#' Author          :   Sotirios Kechagias
+#' Created         :   2023-11-05
+#' Last update     :   2023-11-07
+#' R Version       :   4.3.1
+#' Packages        :   lubridate, dplyr, ggplot2
+#' LICENSE         :   CC BY-NC-SA 4.0
+#' Input           :   dataframes (csv) files of each index for all
+#'                     the reservoirs and images in ./Indices/
+#' Output          :   1) Plots of indices estimation and ground data(in-situ)
+#'                     for either Lebna or Kamech Reservoirs in ./Output/Graphs/
+#'                     2) CSV file of statistic companion(RMSE,R2, BIAS) between
+#'                     ground data and indices in ./Output/
 
 
 #### Package Import ####

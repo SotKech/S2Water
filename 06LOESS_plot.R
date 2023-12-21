@@ -1,12 +1,14 @@
-#'
-#'                      MGI Internship  :   S2Water - LOESS_plot.R
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-09-21
-#'                      Last update     :   2023-12-19
-#'                      R Version       :   4.3.1
-#'                      Packages        :   zoo, ggplot2
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
+#' MGI Internship  :   S2Water - LOESS_plot.R
+#' Author          :   Sotirios Kechagias
+#' Created         :   2023-09-21
+#' Last update     :   2023-12-19
+#' R Version       :   4.3.1
+#' Packages        :   zoo, ggplot2
+#' LICENSE         :   CC BY-NC-SA 4.0
+#' Input           :   dataframes (csv) files of each index for all
+#'                     the reservoirs and images in ./Indices/
+#' Output          :   Plots of LOESS water estimation for all reservoirs
+#'                     in ./Output/Graphs/
 
 #### Package Import ####
 # pkgTest function loads and install packages only when are not installed yet.
@@ -113,7 +115,7 @@ my_colors <- c('#f8766d', '#9e854e', '#2bd4d6', '#4daf4a', '#377eb8', '#f564e3')
 labels <- c('AWEI', 'MBWI', 'MNDWI', 'NDVI', 'NDWI', 'SWI')
 
 # Loop through Reservoir columns from 1 to 12
-for (j in 1:51) {
+for (j in 1:12) {
   # Define the column name
   reservoir_col <- paste0("Reservoir_", j, "_area_ha")
   reservoirs <- c(character(0), reservoir_col)
@@ -133,6 +135,6 @@ for (j in 1:51) {
   # Plot the current Reservoir column
   generate_loess_plot(data_frames, my_colors, labels, reservoir_name, j)
   
-  progress <- round((j / 51) * 100, 2)
+  progress <- round((j / 12) * 100, 2)
   cat(paste0("\r", progress, "%"))
 }

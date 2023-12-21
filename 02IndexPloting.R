@@ -1,12 +1,14 @@
-#'
-#'                      MGI Internship  :   S2Water - 02IndexPlotting.R
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-09-13
-#'                      Last update     :   2023-12-18
-#'                      R Version       :   4.3.1
-#'                      Packages        :   raster, sf, dplyr, ggplot2 
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
+#' MGI Internship  :   S2Water - 02IndexPlotting.R
+#' Author          :   Sotirios Kechagias
+#' Created         :   2023-09-13
+#' Last update     :   2023-12-18
+#' R Version       :   4.3.1
+#' Packages        :   raster, sf, dplyr, ggplot2 
+#' LICENSE         :   CC BY-NC-SA 4.0
+#' Input           :   TIF images of spectral indices in ./Output/
+#'                     * previously calculated by 01IndexCalculation
+#' Output          :   PNG plots(maps) of all indices in ./Output/Plots/  
+
 
 #### Package Import ####
 # pkgTest is a helper function to load packages and  

@@ -1,12 +1,10 @@
-#'
-#'                      MGI Internship  :   S2Water - LOESS_plot
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-09-21
-#'                      Last update     :   2023-11-07
-#'                      R Version       :   4.3.1
-#'                      Packages        :   base, raster, ggplot2, sf
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
+#' Continuation of LOESS_plot.R
+#' 
+#' This script plot the LOESS estimation WITH the min-max points and exports 
+#' them. Although the script is problematic
+#' After that the script finds and export the Standard Deviation but this is
+#' also problematic
+
 
 #### Package Import ####
 # pkgTest function loads and install packages only when are not installed yet.
@@ -31,20 +29,21 @@ for (i in seq_along(indices)) {
 AOI <- sf::st_read("./Data/Lebna_reservoirs_buffered.geojson")
 # Load reservoir names
 reservoir_name <- AOI$Name
-# Read and adjsut insitu data
-insitu <- read.csv("./Data/Surface_Volume_Kamech_2017-2023.csv")
-insitu$Date <- as.Date(insitu$Date)
-insitu$S_ha <- insitu$S_m2 * 1e-4
+# # Read and adjsut insitu data
+# insitu <- read.csv("./Data/Surface_Volume_Kamech_2017-2023.csv")
+# insitu$Date <- as.Date(insitu$Date)
+# insitu$S_ha <- insitu$S_m2 * 1e-4
 
 
 # Define the column number of reservoir
-res <- 23
-# Hellping if as there is no loop yet
-if (res == 23) {
-  j <- 10
-} else if (res == 5) {
-  j <- 1
-}
+res <- 27
+j <- 12
+# # Hellping if as there is no loop yet
+# if (res == 23) {
+#   j <- 10
+# } else if (res == 5) {
+#   j <- 1
+# }
 # Remove rows where a condition is met in result_df2
 rows_to_remove <- which(result_df2[, res] > 0.001)
 f_df1 <- result_df1[-rows_to_remove, ]
@@ -55,12 +54,12 @@ f_df6 <- result_df6[-rows_to_remove, ]
 f_df7 <- result_df7[-rows_to_remove, ]
 
 # Define data and styling information
-data_frames <- list(f_df1, f_df3, f_df4, f_df5, f_df6, f_df7, insitu) # insitu
+data_frames <- list(f_df1, f_df3, f_df4, f_df5, f_df6, f_df7) # insitu
 linetype_vector <- c("dashed", "dashed", "solid","solid",
-                     "solid", "dotdash", "solid")
+                     "solid", "dotdash")
 my_colors <- c('#f8766d', '#9e854e', '#2bd4d6', '#4daf4a',
-               '#377eb8', '#f564e3',"black")
-labels <- c('AWEI', 'MBWI', 'MNDWI', 'NDVI', 'NDWI', 'SWI', "insitu")
+               '#377eb8', '#f564e3')
+labels <- c('AWEI', 'MBWI', 'MNDWI', 'NDVI', 'NDWI', 'SWI')
 
 calculate_loess <- function(df, linetype, my_color, label) {
   df <- df[order(df$Date), ]
@@ -107,7 +106,7 @@ calculate_loess <- function(df, linetype, my_color, label) {
 }
 
 
-calculate_loess(insitu, "solid", "black", "insitu")
+# calculate_loess(insitu, "solid", "black", "insitu")
 
 # Create empty data frames to store peaks and valleys
 all_peaks <- data.frame()
@@ -134,7 +133,10 @@ for (i in seq_along(data_frames)) {
   label      <- result$label
   # Append peaks and valleys to the overall data frames
   all_peaks <- rbind(all_peaks, df_peaks)
+  write.csv(all_peaks, file = file.path(paste0("./Output/Peaks", j,"_", reservoir_name[j], ".csv")))
   all_valleys <- rbind(all_valleys, df_valleys)
+  write.csv(all_valleys, file = file.path(paste0("./Output/Valleys", j,"_", reservoir_name[j], ".csv")))
+  
   # Add lines and points to the combined plot
   combined_plot <- combined_plot +
     geom_line(data = df, aes(x = Date, y = y_pred),
@@ -167,34 +169,34 @@ ggsave(paste0("./Output/Graphs/Extremes_", paste(j,"_", sep = ""), # Change
 
 
 ################################################################################
-
-calculate_standard_deviation <- function(df) {
-  # Convert the 'Date' column to date format
-  df$Date <- as.Date(df$Date)
-  
-  # Convert the date to numeric format
-  df$Numeric_Date <- as.numeric(df$Date)
-  
-  # Create a grouping variable every 6 lines
-  df$Group <- rep(1:ceiling(nrow(df)/6), each=6)[1:nrow(df)]
-  
-  # Now calculate the standard deviation of Y_Pred for each group
-  SD_value <- df %>%
-    group_by(Group) %>%
-    summarise(Std_Y_Pred = sd(y_pred))
-  
-  # Print the result
-  # print(SD_value)
-  
-  # Calculate the standard deviation of Y_Pred and Numeric_Date for each group
-  SD_Date <- df %>%
-    group_by(Group) %>%
-    summarise(Std_Y_Pred = sd(y_pred),
-              Std_Numeric_Date = sd(Numeric_Date))
-  
-  # Print the result
-  print(SD_Date)
-}
-
-################################################################################
-
+# 
+# calculate_standard_deviation <- function(df) {
+#   # Convert the 'Date' column to date format
+#   df$Date <- as.Date(df$Date)
+#   
+#   # Convert the date to numeric format
+#   df$Numeric_Date <- as.numeric(df$Date)
+#   
+#   # Create a grouping variable every 6 lines
+#   df$Group <- rep(1:ceiling(nrow(df)/6), each=6)[1:nrow(df)]
+#   
+#   # Now calculate the standard deviation of Y_Pred for each group
+#   SD_value <- df %>%
+#     group_by(Group) %>%
+#     summarise(Std_Y_Pred = sd(y_pred))
+#   
+#   # Print the result
+#   # print(SD_value)
+#   
+#   # Calculate the standard deviation of Y_Pred and Numeric_Date for each group
+#   SD_Date <- df %>%
+#     group_by(Group) %>%
+#     summarise(Std_Y_Pred = sd(y_pred),
+#               Std_Numeric_Date = sd(Numeric_Date))
+#   
+#   # Print the result
+#   print(SD_Date)
+# }
+# 
+# ################################################################################
+# 

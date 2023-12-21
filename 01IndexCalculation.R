@@ -1,12 +1,13 @@
-#'
-#'                      MGI Internship  :   S2Water - 01IndexCalculation.R
-#'                      Author          :   Sotirios Kechagias
-#'                      Created         :   2023-06-21
-#'                      Last update     :   2023-12-18
-#'                      R Version       :   4.3.1
-#'                      Packages        :   raster, ggplot2, sf
-#'                      LICENSE         :   CC BY-NC-SA 4.0
-#'
+#' MGI Internship  :   S2Water - 01IndexCalculation.R
+#' Author          :   Sotirios Kechagias
+#' Created         :   2023-06-21
+#' Last update     :   2023-12-18
+#' R Version       :   4.3.1
+#' Packages        :   raster, ggplot2, sf
+#' LICENSE         :   CC BY-NC-SA 4.0
+#' Input           :   TIF images with all spectral bands in ./Data/BOA/
+#'                     * previously downloaded form sen2r API
+#' Output          :   TIF images of spectral indices in ./Output/
 
                             #### Package Import ####
 #  pkgTest is a function that loads packages and installsthem only when they
