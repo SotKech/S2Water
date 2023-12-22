@@ -28,12 +28,12 @@ To download images using the Sen2R API from `Sen2r_API/sen2r_API_Lebna.R`, you n
 <!-- USAGE -->
 ## Usage
 - `Sen2r_API/sen2r_API_Lebna.R`: This API takes input parameters and downloads Sentinel-2 Images, then converts them to a cropped Area Of Interest (AOI) TIF with only the usable bands.
-- `01IndexCalculation.R`: Retrieves `Sen2r_API/sen2r_API_Lebna.R` TIF and creates TIF images of spectral indices in ./Output/.
-- `02IndexPloting.R`: Retrieves the TIF images of spectral indices and generates PNG plots (maps) of all indices in ./Output/Plots/.
+- `01IndexCalculation.R`: Retrieves `Sen2r_API/sen2r_API_Lebna.R` TIF and creates TIF images of spectral indices in ./Output/
+- `02IndexPloting.R`: Retrieves the TIF images of spectral indices and generates PNG plots (maps) of all indices in ./Output/Plots/
 - `03IndexDataframe.R`: Retrieves the TIF products of `01IndexCalculation.R` and creates dataframes (CSV) files of each index for all the reservoirs - WARNING: These dataframes contain dates with cloud contamination.
 - `04DataframesPlotting.R`: Retrieves dataframes (CSV) files from `03IndexDataframe.R` and plots of the indices estimation WITHOUT clouds contamination dates in ./Output/Graphs/. Optional output: Plots of the indices estimation WITHOUT clouds WITH FLAGS ~ Either L1C images or manually downloaded images with cloud over tile <10% (Needs ./Indices/Flags.csv as an input).
-- `05InsituComparison.R`: Retrieves dataframes (CSV) files from `03IndexDataframe.R` + the ground data and (1) plots the indices estimation and ground data (in-situ) for either Lebna or Kamech Reservoirs in ./Output/Graphs/ and (2) CSV file of statistical comparison (RMSE, R2, BIAS) between ground data and indices in ./Output/.
-- `LOESS_plot.R`: Retrieves dataframes (CSV) files from `03IndexDataframe.R` and plots LOESS water estimation for all reservoirs in ./Output/Graphs/.
+- `05InsituComparison.R`: Retrieves dataframes (CSV) files from `03IndexDataframe.R` + the ground data and (1) plots the indices estimation and ground data (in-situ) for either Lebna or Kamech Reservoirs in ./Output/Graphs/ and (2) CSV file of statistical comparison (RMSE, R2, BIAS) between ground data and indices in ./Output/
+- `LOESS_plot.R`: Retrieves dataframes (CSV) files from `03IndexDataframe.R` and plots LOESS water estimation for all reservoirs in ./Output/Graphs/
 - `Other_Scripts` contains scripts that either were not used or are incomplete.
 
 <!-- LICENSE -->
